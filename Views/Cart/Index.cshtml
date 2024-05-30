@@ -1,0 +1,225 @@
+﻿
+@{
+    var userid = (int)@Session["UserId"];
+}
+<input type="hidden" id="userid" value="@Session["UserId"]" />
+<table class="table" id="Carttable">
+</table>
+
+<div class="d-flex justify-content-between">
+    <div class="justify-content-start">
+
+    </div>
+    <div class="justify-content-end">
+        <button class="btn btn-google m-5 px-5" id="checkout">Check Out</button>
+    </div>
+
+</div>
+
+
+
+@section scripts{
+
+    <script>
+
+        let table = $('#Carttable').DataTable({
+            processing: false,
+            serverSide: true,
+            ajax: {
+                url: "/Cart/LoadCart",
+                type: "POST",
+                dataType: "json",
+                data: function (d) {
+                    d.id = $("#userid").val();
+                    d.start = d.start;
+                    d.length = d.length;
+
+                }
+            },
+            columns: [
+                { data: 'name', title: 'Name', class: 'text-center' },
+                {
+                    data: null,
+                    title: 'Qty',
+                    class: 'text-center',
+                    render: function (data, type, row) {
+                        return `
+             <div style="display: flex; justify-content: space-between; align-items: center;">
+                 <button type="button" class="btn btn-info" onclick="Minus(${row.id})"> - </button>
+                 <span>${data.qty}</span>
+                 <button type="button" class="btn btn-info" onclick="Plus(${row.id})"> + </button>
+             </div>
+         `;
+                    }
+                },
+                {
+                    data: 'total',
+                    title: 'Total Amount',
+                    class: 'text-center',
+
+                },
+                {
+                    data: null,
+                    render: function (data, type, row) {
+                        return `<button type="button" class="btn btn-info" onclick="Delete(${data.id})">Delete Item</button>`
+                    }
+
+                }
+
+
+
+            ],
+            lengthMenu: [
+                [5, 10, 25, 50, -1],
+                [5, 10, 25, 50, "All"]],
+            pageLength: 5,
+            order: [
+                [0, 'asc']
+            ],
+            dom: '<"row"<"col-lg-4 col-md-4"l><"col-lg-4 col-md-4"f><"col-lg-4 col-md-4 text-end"B>>rt<"row"<"col-lg-9 col-md-8"i><"col-lg-3 col-md-4 text-end"p>>',
+            buttons: [
+                {
+                    extend: 'collection',
+                    text: 'Export',
+                    buttons: ['copy', 'csv', 'excel', 'pdf', 'print']
+                }
+            ]
+
+        });
+        function Delete(id) {
+            $.ajax({
+                method: "POST",
+                url: "/Cart/Delete",
+                processData: false,
+                data: JSON.stringify({ id: id }),
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    if (data.status == "failure") {
+                        $.notify(data.message, "error");
+                    }
+                    else {
+                        $.notify(data.message, "success");
+                    }
+                    table.draw(false);
+                  /*  checkTablelength();*/
+                },
+                error: function (data) {
+                    $.notify("something went wrong", "success");
+                }
+            });
+
+        }
+
+        function Minus(id) {
+            $.ajax({
+                    method: "POST",
+                    url: "/Cart/MinustoCart",
+                    processData: false,
+                    data: JSON.stringify({ id: id }),
+                    contentType: "application/json; charset=utf-8",
+                success: function (data) {
+             
+                        if (data.status == "failure") {
+                            $.notify(data.message, "error");
+                        }
+                        else {
+                            $.notify(data.message, "success");
+                        }
+                        table.draw(false);
+                    
+                    },
+                    error: function (data) {
+                        $.notify("something went wrong", "success");
+                    }
+                });
+        }
+
+        function Plus(id) {
+            $.ajax({
+                method: "POST",
+                url: "/Cart/PlustoCart",
+                processData: false,
+                data: JSON.stringify({ id: id }),
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    if (data.status == "failure") {
+                        $.notify(data.message, "error");
+                    }
+                    else {
+                        $.notify(data.message, "success");
+                    }
+                    table.draw(false);
+
+                },
+                error: function (data) {
+                    $.notify("something went wrong", "success");
+                }
+            });
+        }
+
+        function checkTablelength() {
+
+            var btn = $('#checkout');
+            var id = $("#userid").val();
+            $.ajax({
+                method: "POST",
+                url: "/Main/CartLength",
+                processData: false,
+                data: JSON.stringify({ id: id }),
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    console.log(data.data);
+                    console.log(data);
+                    if (data.data == 0) {
+                        btn.prop('disabled', true);
+                    }
+                    else {
+                        btn.prop('disabled', false);
+                    }
+
+                },
+                error: function (err) {
+                    console.log(err);
+                    console.log("Error")
+                }
+            })
+
+
+        }
+        $(document).ready(function () {
+
+            checkTablelength();
+        })
+        $('#checkout').on('click' ,function () {
+            var id = $("#userid").val();
+            $.ajax({
+                method: "POST",
+                url: "/Main/CartLength",
+                processData: false,
+                data: JSON.stringify({ id: id }),
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+
+                    if (data.data == 0) {
+                        Swal.fire({
+                            title: "Your Cart is Empty",
+                            icon: "question"
+                        });
+                    }
+                    else {
+                        window.location.href = '/Main/CheckOut';
+                    }
+
+                },
+                error: function (err) {
+                    console.log(err);
+                    console.log("Error")
+                }
+            })
+        })
+       
+
+    </script>
+
+
+}

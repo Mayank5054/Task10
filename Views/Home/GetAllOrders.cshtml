@@ -1,0 +1,118 @@
+﻿@using Task10.Models;
+
+@model List<DisplayOrder>
+
+
+
+<table class="table table-bordered" id="OrdersTable">
+    <thead>
+        <tr>
+            <th>Order Id</th>
+            <th>Name Of Product</th>
+            <th>Total Amount</th>
+            <th>Order Date</th>
+            <th>Print</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (DisplayOrder i in Model)
+        {
+            <tr id="@i.OrderId">
+                <td>@i.OrderId</td>
+                @if (@i.singleProduct == null)
+                {
+                    <td style="color:red">Dish/Item Has Been Removed</td>
+                }
+                else
+                {
+                    <td>@i.singleProduct</td>
+                }
+
+                <td>@i.Amount</td>
+                <td>@i.orderDate</td>
+                <td><button class="btn btn-info" onclick="printDiv(@i.OrderId)">Click To Print</button></td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<script>
+
+
+
+    function printDiv(orderId) {
+     
+        $.ajax({
+            url: "/home/GetOrderById?orderId=" + orderId,
+            method: "GET",
+    
+            success: function (data) {
+                console.log(data)
+                var jsonData = JSON.parse(data.data);
+              
+                var a = window.open('', '', 'height=500, width=500');
+                a.document.write('<html>');
+                a.document.write(`<body class="d-flex align-items-center justify-content-center"> Order Number : ${jsonData.OrderId} <br>`);
+                a.document.write(`<h3>Order Date : ${jsonData.orderDate.split('T')[0]}</h3> <br>`);
+                for (var j = 0; j < jsonData.ProductName.length; j++) {
+                    a.document.write(`<p> Item ${j + 1} : ${jsonData.ProductName[j]} </p><br>`);
+                }
+                a.document.write('</body></html>');
+                a.document.close();
+
+                var b = ""; 
+                b += "<html>";
+                b += `<body class="d-flex align-items-center justify-content-center"> Order Number : ${jsonData.OrderId} <br>`;
+            
+                b += `<h3>Order Date : ${jsonData.orderDate.split('T')[0]}</h3> <br>`;
+            
+                for (var j = 0; j < jsonData.ProductName.length; j++) {
+                    b += `<p> Item ${j + 1} : ${jsonData.ProductName[j]} </p><br>`;
+                }
+         
+                b += '</body></html>';
+                console.log(b);
+                $.ajax({
+                    url: "/Mail/Index",
+                    method: "POST",
+                    data: JSON.stringify({data:b}),
+                    processData:true,
+                    contentType:"application/json;charset=utf-8",
+                    success: function (data) {
+                        if (data.status == "success") {
+                            $.notify(data.message, "success");
+                        }
+                        console.log(data);
+                    },
+                    error: function (data) {
+                        $.notify("Unexpected Error Occured", "error");
+                        console.log(data);
+                    }
+                })
+                a.print();
+            },
+            error: function (data) {
+                $.notify("Something Went Wrong", "error");
+                console.log(data);
+            }
+        })
+              
+                
+            
+        } 
+    
+</script>
+<script>
+    $(document).ready(function () {
+        $("#OrdersTable").DataTable({
+            columns: [
+                { data: "OrderId" },
+                { data: "singleProduct" },
+                { data: "Amount" },
+                { data:"orderDate"},
+                { data: "Actions" },
+
+            ]
+        })
+    })
+</script>

@@ -1,0 +1,75 @@
+﻿
+
+@using Task10.Models;
+
+@model Dish
+
+@if (Model == null)
+{
+    <p>No Dish Available Today</p>
+    <script>
+        $.notify("No Dish Available today", "error");
+    </script>
+}
+else
+{
+    <h2> Today's Dish</h2>
+    <h3>@Model.Product.Name</h3>
+    <table class="table table-bordered" id="productsTable">
+        <thead>
+            <tr>
+                <th>ProductId</th>
+                <th>Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (DishItem i in Model.DishItems)
+            {
+                <tr style="background:@(i.Isdeleted==1 ? "red" : "" ) ">
+                    <td>@i.Product.ProductId</td>
+                    <td>@i.Product.Name x @i.Qty</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    int totalAmount = (int)Model.Product.Price;
+    int totalAmount1 = (int)Model.DishItems.Sum(x => (x.Product.Price * x.Qty));
+
+    <h6 style="text-decoration:line-through">Total Amount : @totalAmount1</h6>
+    <h6>Dish Price : @totalAmount</h6>
+    <button class="btn btn-primary" onclick="MakeAnOrder(@Model.Product.ProductId)">Make An Order</button>
+}
+
+
+
+
+<script>
+
+    var productIds = [];
+
+    function MakeAnOrder(ProductId) {
+
+        $.ajax({
+            url: "/Home/MakeAnOrder?productId=" + ProductId,
+            method: "GET",
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                if (data.status == "failure") {
+                    $.notify(data.message, "error");
+                }
+                else {
+                    $.notify(data.message, "success");
+                }
+                console.log(data);
+            },
+            error: function (data) {
+                $.notify("Something Went Wrong", "error");
+                console.log(data);
+            }
+        })
+
+
+    }
+</script>

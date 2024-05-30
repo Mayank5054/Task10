@@ -1,0 +1,37 @@
+﻿
+@using Task10.Models;
+@model LoginModel
+
+@if (TempData["Registered"] != null)
+{
+    <script>
+        $.notify("@TempData["Registered"]", "success");
+        @{TempData["Registered"] = null;
+        }
+    </script>
+}
+@if (ViewBag.PasswordInvalid != null)
+{
+    <script>
+        $.notify("@ViewBag.PasswordInvalid", "error");
+    </script>
+}
+
+@using (Html.BeginForm("Login", "Authentication", FormMethod.Post, new
+{
+    @id = "LoginForm"
+}))
+{
+    <div class="form-floating mt-3 mb-3 ">
+        @Html.TextBoxFor(model => model.Email, new { id = "contactNumber", @class = "form-control", style = "max-width:100%;height:50px !important", placeholder = "" })
+        @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label" })
+        @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+    </div>
+    <div class="form-floating mt-3 mb-3">
+        @Html.TextBoxFor(model => model.password, new { id = "password", @class = "form-control", style = "max-width:100%;height:50px !important", placeholder = "" })
+        @Html.LabelFor(model => model.password, htmlAttributes: new { @class = "control-label" })
+        @Html.ValidationMessageFor(model => model.password, "", new { @class = "text-danger" })
+    </div>
+    <button class="btn btn-primary">Submit</button>
+}
+

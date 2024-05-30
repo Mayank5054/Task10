@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="939956b054ef4b9f8092b10b46ade23d" Name="Diagram1" ZoomLevel="73">
+        <EntityTypeShape EntityType="ExamModel.Dish" Width="1.5" PointX="1.625" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="ExamModel.DishItem" Width="1.5" PointX="9.125" PointY="5.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="ExamModel.OrderItem" Width="1.5" PointX="2.75" PointY="0.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="ExamModel.Order" Width="1.5" PointX="12.625" PointY="3.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="ExamModel.Product" Width="1.5" PointX="3.75" PointY="5.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="ExamModel.User" Width="1.5" PointX="5.875" PointY="1.5" IsExpanded="true" />
+        <AssociationConnector Association="ExamModel.FK__Dish__ItemID__300424B4" ManuallyRouted="false" />
+        <AssociationConnector Association="ExamModel.FK__DishItem__DishId__32E0915F" ManuallyRouted="false" />
+        <AssociationConnector Association="ExamModel.FK__DishItem__ItemID__33D4B598" ManuallyRouted="false" />
+        <AssociationConnector Association="ExamModel.FK__OrderItem__ItemI__2D27B809" ManuallyRouted="false" />
+        <AssociationConnector Association="ExamModel.FK__OrderItem__Order__2C3393D0" ManuallyRouted="false" />
+        <AssociationConnector Association="ExamModel.FK__Orders__Customer__29572725" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="ExamModel.Cart" Width="1.5" PointX="0.75" PointY="10.625" />
+        <EntityTypeShape EntityType="ExamModel.CartItemId" Width="1.5" PointX="5.75" PointY="10.125" />
+        <AssociationConnector Association="ExamModel.FK__Cart__UserId__36B12243" />
+        <AssociationConnector Association="ExamModel.FK__CartItemI__CartI__398D8EEE" />
+        <AssociationConnector Association="ExamModel.FK__CartItemI__ItemI__3A81B327" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

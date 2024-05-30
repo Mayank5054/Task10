@@ -1,0 +1,112 @@
+﻿
+@using Task10.Models;
+
+@model List<Product>
+<script>
+    function AddToCartOm(id, price) {
+        var userid = $('#userid').val();
+        var pid = id;
+        var pprice = price;
+
+        console.log(pid, pprice, userid);
+        $.ajax({
+            method: "POST",
+            url: "/Cart/AddtoCart",
+            processData: false,
+            data: JSON.stringify({ id: pid, price: pprice, userid: userid }),
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+              
+                if (data.status == "success") {
+                  
+                    $.notify(data.message, "success");
+                }
+                else {
+                    $.notify(data.message, "error");
+                }
+                //Swal.fire({
+                //    position: "top-end",
+                //    icon: "success",
+                //    title: "Product Added to Cart",
+                //    showConfirmButton: false,
+                //    timer: 1500
+                //});
+
+            },
+            error: function (err) {
+                $.notify("UNEXPECTED ERROR", "error");
+            }
+        });
+    }
+</script>
+<table class="table table-bordered" id="productsTable">
+    <thead>
+        <tr>
+            <th>ProductId</th>
+            <th>Name</th>
+       
+            <th>Price</th>
+        
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(Product i in Model)
+            {
+                <tr>
+                    <td>@i.ProductId</td>
+                    <td>@i.Name</td>
+                    <td>@i.Price</td>
+                   
+                    <td></td>
+                </tr>
+            }
+    </tbody>
+</table>
+<script>
+    $(document).ready(function () {
+        $("#productsTable").DataTable({
+            columns: [
+
+                { data: "ProductId",visible:false },
+                { data: "Name" },
+                { data: "Price" },
+                {
+                    data: "Actions",
+                    render: function (data, type, row) {
+                        return `
+                        <button class="btn btn-info" onclick="AddToCartOm(${row.ProductId},${row.Price})">Add To Cart</button>
+                        `
+                    }
+                },
+            ]
+        })
+    })
+</script>
+<script>
+    function AddToCart(productId) {
+        $.ajax({
+            url: "/Home/MakeAnOrder?productId=" + productId,
+            method: "GET",
+            //data: JSON.stringify({
+            //    items:[productId]
+            //}),
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                if (data.status == "failure") {
+                    $.notify(data.message, "error");
+                }
+                else {
+                    $.notify(data.message, "success");
+                }
+            },
+            error: function (data) {
+                $.notify("Something Went Wrong", "error");
+            console.log(data);
+            }
+        })
+
+    }
+</script>
+
