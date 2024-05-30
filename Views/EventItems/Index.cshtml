@@ -1,0 +1,258 @@
+﻿@model Task10.ViewModels.EventItemsProducts
+
+@{
+    ViewBag.Title = "Event Items";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1 class="fw-bolder text-center my-5">Event items</h1>
+<table class="table table-bordered" id="event-items-table">
+    <thead>
+
+        <tr>
+            <th></th>
+            <th>
+                @Html.DisplayNameFor(model => model.products[0].Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.eventItems[0].Qty)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.eventItems[0].TotalAmount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.eventItems[0].CreatedOn)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.eventItems[0].UpdatedOn)
+            </th>
+            <th>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var item in Model.eventItems)
+        {
+            <tr>
+                <td>
+                    @Html.HiddenFor(modelItem => item.EventItemId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Product.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Qty)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TotalAmount)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreatedOn)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UpdatedOn)
+                </td>
+                <td>
+                    <button class="btn btn-outline-danger" onclick="deleteEventItem(@item.EventItemId)">Delete</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+
+</table>
+
+@*@using (Html.BeginForm())*@
+@using (Html.BeginForm("Create", "EventItems", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(e => e.EventId)
+
+    <h1 class="fw-bolder text-center my-5">Available products</h1>
+
+    <table class="table table-bordered table-striped mt-5" id="products-table">
+        <thead>
+            <tr>
+                <th></th>
+                <th>
+                    @Html.DisplayNameFor(model => model.products[0].Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.products[0].Threshold)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.products[0].WeightType)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.products[0].Type)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.products[0].Price)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.eventItems[0].Qty)
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var item in Model.products)
+            {
+                <tr>
+                    <td>
+                        <input type="checkbox" value="true" id="product-@item.ProductId.ToString()" name="product-@item.ProductId.ToString()" />
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Threshold)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.WeightType)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Type)
+                    </td>
+                    <td>
+                        @{
+                            if (item.Type.ToLower() == "purchasable")
+                            {
+                                var discountedPrice = Math.Round((double)item.Price - Convert.ToDouble(item.Price) * 0.05, 2);
+                                @*<span class="text-decoration-line-through">@Html.DisplayFor(modelItem => item.Price)</span>*@
+                                @discountedPrice
+                            }
+                            else
+                            {
+                                @Html.DisplayFor(modelItem => item.Price)
+                            }
+                        }
+                    </td>
+                    <td>
+                        <select class="form-control" id="Quantity" name="product-@item.ProductId.ToString()-Quantity">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10">10</option>
+                            <option value="11">11</option>
+                            <option value="12">12</option>
+                            <option value="13">13</option>
+                            <option value="14">14</option>
+                            <option value="15">15</option>
+                        </select>
+                    </td>
+                </tr>
+            }
+        </tbody>
+        <tr>
+            <td colspan="7">Total amount: <span id="totalAmount">0</span></td>
+        </tr>
+    </table>
+
+
+    <input type="submit" value="Save" class="btn btn-primary" />
+
+}
+
+
+<button class="btn btn-success position-fixed" style="bottom: 50px; right: 30px;" onclick="scrollToTop()">Scroll to top</button>
+<button class="btn btn-warning position-fixed" style="bottom: 10px; right: 30px;" onclick="scrollToBottom()">Scroll to bottom</button>
+
+
+@section Scripts {
+    
+
+    <script>
+        const deleteEventItem = (id) => {
+            console.log(id)
+            if (confirm('Are you sure you want to delete the event item?')) {
+
+                AjaxCall(`/EventItems/Delete/${id}`, "GET", null, null, null,
+
+                    (response) => {
+                        if (response.success) {
+                            window.location.reload(true);
+                        } else {
+                            alert('Failed to delete the record.', response.error)
+                        }
+                    },
+
+                    (error) => console.log(error)
+                )
+            }
+        }
+
+        const scrollToTop = () => {
+            document.documentElement.scrollTop = 0;
+            document.body.scrollTop = 0;
+        }
+
+        const scrollToBottom = () => {
+            document.documentElement.scrollTop = document.documentElement.scrollHeight;
+            document.body.scrollTop = document.body.scrollHeight;
+        }
+
+
+        $(document).ready(function () {
+
+
+            const handleTotalAmount = () => {
+                let totalAmount = 0
+
+                const checkedCheckBoxes = $('input[type="checkbox"]:checked')
+
+                //console.log(checkedCheckBoxes)
+
+                checkedCheckBoxes.each(function () {
+                    const quantity = parseInt($(this).closest('tr').find('select').val())
+                    const price = parseFloat($(this).closest('tr').find('td:eq(5)').text())
+
+                    if (!isNaN(quantity) && !isNaN(price)) totalAmount += price * quantity
+
+                });
+
+                $('#totalAmount').text(totalAmount.toFixed(2))
+            }
+
+            $("#event-items-table").DataTable({
+                "columns": [
+                    { "data": "EventItemId", "orderable": false, "searchable": false, render: (data, type, row, meta) => { return meta.row + 1 } },
+                    { "data": "Name" },
+                    { "data": "Qty" },
+                    { "data": "TotalAmount" },
+                    { "data": "CreatedOn" },
+                    { "data": "UpdatedOn" },
+                    { "data": "", "orderable": false, "searchable": false }
+                ]
+            });
+
+            $('#products-table').DataTable({
+                "paging": false,
+                "info": true,
+                "searching": true,
+                "ordering": true,
+                "columns": [
+                    { "data": "", "orderable": false, "searchable": false },
+                    { "data": "Name" },
+                    { "data": "Threshold" },
+                    { "data": "WeightType" },
+                    { "data": "Type" },
+                    { "data": "Price" },
+                    { "data": "Qty", "orderable": false, "searchable": false }
+                ]
+            });
+
+
+
+            $('input[type="checkbox"], select').on('change', handleTotalAmount)
+            //$('.dt-paging-button').on('click', handleTotalAmount)
+
+        });
+    </script>
+}

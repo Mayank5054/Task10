@@ -132,7 +132,7 @@ namespace Task10.Controllers
                             orderItem.OrderId = _order.OrderId;
                             orderItem.ItemID = i.Product.ProductId;
                             orderItem.Type = i.Product.Type;
-                            orderItem.Quantity = 1;
+                            orderItem.Quantity = i.Qty;
                             orderItem.Amount = i.Product.Price;
                             orderItem.TaxPercentage = 0;
                             orderItem.TaxAmount = 0;

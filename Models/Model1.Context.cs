@@ -33,5 +33,7 @@ namespace Task10.Models
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<Cart> Carts { get; set; }
         public virtual DbSet<CartItemId> CartItemIds { get; set; }
+        public virtual DbSet<Event> Events { get; set; }
+        public virtual DbSet<EventItem> EventItems { get; set; }
     }
 }

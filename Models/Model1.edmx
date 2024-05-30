@@ -58,6 +58,34 @@
           <Property Name="CreatedBy" Type="int" />
           <Property Name="Isdeleted" Type="int" />
         </EntityType>
+        <EntityType Name="Event">
+          <Key>
+            <PropertyRef Name="EventId" />
+          </Key>
+          <Property Name="EventId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="EventDate" Type="datetime" />
+          <Property Name="Duration" Type="varchar" MaxLength="255" />
+          <Property Name="QtyOfDishes" Type="int" />
+          <Property Name="CreatedOn" Type="datetime" />
+          <Property Name="UpdatedOn" Type="datetime" />
+          <Property Name="CreatedBy" Type="int" />
+          <Property Name="IsDeleted" Type="int" />
+          <Property Name="UserId" Type="int" />
+        </EntityType>
+        <EntityType Name="EventItems">
+          <Key>
+            <PropertyRef Name="EventItemId" />
+          </Key>
+          <Property Name="EventItemId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="EventId" Type="int" />
+          <Property Name="ItemId" Type="int" />
+          <Property Name="Qty" Type="int" />
+          <Property Name="TotalAmount" Type="decimal" Precision="10" Scale="2" />
+          <Property Name="CreatedOn" Type="datetime" />
+          <Property Name="UpdatedOn" Type="datetime" />
+          <Property Name="CreatedBy" Type="int" />
+          <Property Name="IsDeleted" Type="int" />
+        </EntityType>
         <EntityType Name="OrderItems">
           <Key>
             <PropertyRef Name="OrderItemId" />
@@ -195,6 +223,42 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK__Event__UserId__2739D489">
+          <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
+          <End Role="Event" Type="Self.Event" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Event">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__EventItem__Event__59063A47">
+          <End Role="Event" Type="Self.Event" Multiplicity="0..1" />
+          <End Role="EventItems" Type="Self.EventItems" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Event">
+              <PropertyRef Name="EventId" />
+            </Principal>
+            <Dependent Role="EventItems">
+              <PropertyRef Name="EventId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__EventItem__ItemI__59FA5E80">
+          <End Role="Products" Type="Self.Products" Multiplicity="0..1" />
+          <End Role="EventItems" Type="Self.EventItems" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Products">
+              <PropertyRef Name="ProductId" />
+            </Principal>
+            <Dependent Role="EventItems">
+              <PropertyRef Name="ItemId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK__OrderItem__ItemI__2D27B809">
           <End Role="Products" Type="Self.Products" Multiplicity="0..1" />
           <End Role="OrderItems" Type="Self.OrderItems" Multiplicity="*" />
@@ -236,6 +300,8 @@
           <EntitySet Name="CartItemId" EntityType="Self.CartItemId" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Dish" EntityType="Self.Dish" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DishItem" EntityType="Self.DishItem" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Event" EntityType="Self.Event" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EventItems" EntityType="Self.EventItems" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="OrderItems" EntityType="Self.OrderItems" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Orders" EntityType="Self.Orders" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Products" EntityType="Self.Products" Schema="dbo" store:Type="Tables" />
@@ -263,6 +329,18 @@
           <AssociationSet Name="FK__DishItem__ItemID__33D4B598" Association="Self.FK__DishItem__ItemID__33D4B598">
             <End Role="Products" EntitySet="Products" />
             <End Role="DishItem" EntitySet="DishItem" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Event__UserId__2739D489" Association="Self.FK__Event__UserId__2739D489">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Event" EntitySet="Event" />
+          </AssociationSet>
+          <AssociationSet Name="FK__EventItem__Event__59063A47" Association="Self.FK__EventItem__Event__59063A47">
+            <End Role="Event" EntitySet="Event" />
+            <End Role="EventItems" EntitySet="EventItems" />
+          </AssociationSet>
+          <AssociationSet Name="FK__EventItem__ItemI__59FA5E80" Association="Self.FK__EventItem__ItemI__59FA5E80">
+            <End Role="Products" EntitySet="Products" />
+            <End Role="EventItems" EntitySet="EventItems" />
           </AssociationSet>
           <AssociationSet Name="FK__OrderItem__ItemI__2D27B809" Association="Self.FK__OrderItem__ItemI__2D27B809">
             <End Role="Products" EntitySet="Products" />
@@ -368,6 +446,7 @@
           <NavigationProperty Name="DishItems" Relationship="Self.FK__DishItem__ItemID__33D4B598" FromRole="Products" ToRole="DishItem" />
           <NavigationProperty Name="OrderItems" Relationship="Self.FK__OrderItem__ItemI__2D27B809" FromRole="Products" ToRole="OrderItems" />
           <NavigationProperty Name="CartItemIds" Relationship="ExamModel.FK__CartItemI__ItemI__3A81B327" FromRole="Product" ToRole="CartItemId" />
+          <NavigationProperty Name="EventItems" Relationship="ExamModel.FK__EventItem__ItemI__59FA5E80" FromRole="Product" ToRole="EventItem" />
         </EntityType>
         <EntityType Name="User">
           <Key>
@@ -386,6 +465,7 @@
           <Property Name="Isdeleted" Type="Int32" />
           <NavigationProperty Name="Orders" Relationship="Self.FK__Orders__Customer__29572725" FromRole="Users" ToRole="Orders" />
           <NavigationProperty Name="Carts" Relationship="ExamModel.FK__Cart__UserId__36B12243" FromRole="User" ToRole="Cart" />
+          <NavigationProperty Name="Events" Relationship="ExamModel.FK__Event__UserId__2739D489" FromRole="User" ToRole="Event" />
         </EntityType>
         <Association Name="FK__Dish__ItemID__300424B4">
           <End Role="Products" Type="Self.Product" Multiplicity="0..1" />
@@ -504,6 +584,20 @@
             <End Role="Product" EntitySet="Products" />
             <End Role="CartItemId" EntitySet="CartItemIds" />
           </AssociationSet>
+          <EntitySet Name="Events" EntityType="ExamModel.Event" />
+          <EntitySet Name="EventItems" EntityType="ExamModel.EventItem" />
+          <AssociationSet Name="FK__Event__UserId__2739D489" Association="ExamModel.FK__Event__UserId__2739D489">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Event" EntitySet="Events" />
+          </AssociationSet>
+          <AssociationSet Name="FK__EventItem__Event__59063A47" Association="ExamModel.FK__EventItem__Event__59063A47">
+            <End Role="Event" EntitySet="Events" />
+            <End Role="EventItem" EntitySet="EventItems" />
+          </AssociationSet>
+          <AssociationSet Name="FK__EventItem__ItemI__59FA5E80" Association="ExamModel.FK__EventItem__ItemI__59FA5E80">
+            <End Role="Product" EntitySet="Products" />
+            <End Role="EventItem" EntitySet="EventItems" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="Cart">
           <Key>
@@ -568,6 +662,74 @@
             </Principal>
             <Dependent Role="CartItemId">
               <PropertyRef Name="ItemID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Event">
+          <Key>
+            <PropertyRef Name="EventId" />
+          </Key>
+          <Property Name="EventId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="EventDate" Type="DateTime" Precision="3" />
+          <Property Name="Duration" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="QtyOfDishes" Type="Int32" />
+          <Property Name="CreatedOn" Type="DateTime" Precision="3" />
+          <Property Name="UpdatedOn" Type="DateTime" Precision="3" />
+          <Property Name="CreatedBy" Type="Int32" />
+          <Property Name="IsDeleted" Type="Int32" />
+          <Property Name="UserId" Type="Int32" />
+          <NavigationProperty Name="User" Relationship="ExamModel.FK__Event__UserId__2739D489" FromRole="Event" ToRole="User" />
+          <NavigationProperty Name="EventItems" Relationship="ExamModel.FK__EventItem__Event__59063A47" FromRole="Event" ToRole="EventItem" />
+        </EntityType>
+        <EntityType Name="EventItem">
+          <Key>
+            <PropertyRef Name="EventItemId" />
+          </Key>
+          <Property Name="EventItemId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="EventId" Type="Int32" />
+          <Property Name="ItemId" Type="Int32" />
+          <Property Name="Qty" Type="Int32" />
+          <Property Name="TotalAmount" Type="Decimal" Precision="10" Scale="2" />
+          <Property Name="CreatedOn" Type="DateTime" Precision="3" />
+          <Property Name="UpdatedOn" Type="DateTime" Precision="3" />
+          <Property Name="CreatedBy" Type="Int32" />
+          <Property Name="IsDeleted" Type="Int32" />
+          <NavigationProperty Name="Event" Relationship="ExamModel.FK__EventItem__Event__59063A47" FromRole="EventItem" ToRole="Event" />
+          <NavigationProperty Name="Product" Relationship="ExamModel.FK__EventItem__ItemI__59FA5E80" FromRole="EventItem" ToRole="Product" />
+        </EntityType>
+        <Association Name="FK__Event__UserId__2739D489">
+          <End Type="ExamModel.User" Role="User" Multiplicity="0..1" />
+          <End Type="ExamModel.Event" Role="Event" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Event">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__EventItem__Event__59063A47">
+          <End Type="ExamModel.Event" Role="Event" Multiplicity="0..1" />
+          <End Type="ExamModel.EventItem" Role="EventItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Event">
+              <PropertyRef Name="EventId" />
+            </Principal>
+            <Dependent Role="EventItem">
+              <PropertyRef Name="EventId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__EventItem__ItemI__59FA5E80">
+          <End Type="ExamModel.Product" Role="Product" Multiplicity="0..1" />
+          <End Type="ExamModel.EventItem" Role="EventItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="ProductId" />
+            </Principal>
+            <Dependent Role="EventItem">
+              <PropertyRef Name="ItemId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -700,6 +862,36 @@
                 <ScalarProperty Name="ItemID" ColumnName="ItemID" />
                 <ScalarProperty Name="CartId" ColumnName="CartId" />
                 <ScalarProperty Name="CartItemId1" ColumnName="CartItemId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Events">
+            <EntityTypeMapping TypeName="ExamModel.Event">
+              <MappingFragment StoreEntitySet="Event">
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="UpdatedOn" ColumnName="UpdatedOn" />
+                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+                <ScalarProperty Name="QtyOfDishes" ColumnName="QtyOfDishes" />
+                <ScalarProperty Name="Duration" ColumnName="Duration" />
+                <ScalarProperty Name="EventDate" ColumnName="EventDate" />
+                <ScalarProperty Name="EventId" ColumnName="EventId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EventItems">
+            <EntityTypeMapping TypeName="ExamModel.EventItem">
+              <MappingFragment StoreEntitySet="EventItems">
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="UpdatedOn" ColumnName="UpdatedOn" />
+                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+                <ScalarProperty Name="TotalAmount" ColumnName="TotalAmount" />
+                <ScalarProperty Name="Qty" ColumnName="Qty" />
+                <ScalarProperty Name="ItemId" ColumnName="ItemId" />
+                <ScalarProperty Name="EventId" ColumnName="EventId" />
+                <ScalarProperty Name="EventItemId" ColumnName="EventItemId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

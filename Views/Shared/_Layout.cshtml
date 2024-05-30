@@ -9,7 +9,7 @@
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
-
+    <script src="~/Scripts/CustomJs/AjaxCall.js"></script>
     <script src="~/Scripts/jquery.validate.min.js"></script>
 
     <link href="~/Content/datatables.min.css" rel="stylesheet" />
@@ -48,5 +48,28 @@
     </div>
     @Scripts.Render("~/bundles/jqueryval")
     @RenderSection("scripts", required: false)
+
+
 </body>
 </html>
+
+@if (ViewBag.Error != null)
+{
+    <script>
+        const alertPopup = (message) => {
+            const body = document.body
+            const wrapper = document.createElement('div')
+            wrapper.innerHTML = [
+                `<div class="alert alert-danger alert-dismissible" role="alert" style="position: absolute; top: 100px; right: 50px;">`,
+                `   <div>${message}</div>`,
+                '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
+                '</div>'
+            ].join('')
+
+            body.append(wrapper)
+        }
+
+        alertPopup('@ViewBag.Error')
+    </script>
+
+}

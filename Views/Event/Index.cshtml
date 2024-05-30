@@ -1,0 +1,122 @@
+﻿
+@model IEnumerable<Task10.Models.Event>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Index</h2>
+
+<p>
+</p>
+
+<a href="/Event/Create" id="createEventBtn" class="btn btn-primary">
+    Create a new event
+</a>
+<div class="modal fade text-left" role="dialog" id="createEvent" tabindex="-1" aria-labelledby="createEventLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <h5 class="modal-title white" id="createEventLabel"></h5>
+                <button type="button" class="btn rounded-circle text-white" data-bs-dismiss="modal" aria-label="Close">
+                    x
+                </button>
+            </div>
+            <div id="eventForm" class="modal-body">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<table class="table table-bordered table-striped" id="events-table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.EventDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Duration)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.QtyOfDishes)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreatedOn)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UpdatedOn)
+            </th>
+            <th></th>
+        </tr>
+
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EventDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Duration)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.QtyOfDishes)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreatedOn)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UpdatedOn)
+                </td>
+                <td>
+                    <a href="/Event/Edit/@item.EventId" class="btn btn-outline-primary">Edit</a>
+                    <a href="/EventItems/Index/@item.EventId" class="btn btn-outline-success">View</a>
+                    <button class="btn btn-outline-danger" onclick="deleteEvent(@item.EventId)">Delete</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+
+</table>
+
+@section Scripts {
+    
+
+    <script>
+        const deleteEvent = (id) => {
+            if (confirm('Are you sure you want to delete the event?')) {
+
+                AjaxCall(`/Event/Delete/${id}`, "GET", null, null, null,
+
+                    (response) => {
+                        if (response.success) {
+                            window.location.reload(true);
+                        } else {
+                            alert('Failed to delete the record.', response.error);
+                        }
+                    },
+
+                    (error) => console.log(error)
+                )
+            }
+        }
+
+
+        $(document).ready(function () {
+            $("#events-table").DataTable({
+                "columns": [
+                    { "data": "EventDate" },
+                    { "data": "Duration" },
+                    { "data": "QtyOfDishes" },
+                    { "data": "CreatedOn" },
+                    { "data": "UpdatedOn" },
+                    { "data": "", "orderable": false, "searchable": false }
+                ]
+            })
+        })
+    </script>
+}
