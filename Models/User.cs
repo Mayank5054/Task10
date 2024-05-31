@@ -25,6 +25,7 @@ namespace Task10.Models
             this.CookingSessions = new HashSet<CookingSession>();
             this.CookingSessionAttendees = new HashSet<CookingSessionAttendee>();
             this.ReservedTables = new HashSet<ReservedTable>();
+            this.Stocks = new HashSet<Stock>();
         }
     
         public int UserId { get; set; }
@@ -55,5 +56,7 @@ namespace Task10.Models
         public virtual ICollection<CookingSessionAttendee> CookingSessionAttendees { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ReservedTable> ReservedTables { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Stock> Stocks { get; set; }
     }
 }

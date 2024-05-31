@@ -22,6 +22,7 @@ namespace Task10.Models
             this.OrderItems = new HashSet<OrderItem>();
             this.CartItemIds = new HashSet<CartItemId>();
             this.EventItems = new HashSet<EventItem>();
+            this.Stocks = new HashSet<Stock>();
         }
     
         public int ProductId { get; set; }
@@ -46,5 +47,7 @@ namespace Task10.Models
         public virtual ICollection<CartItemId> CartItemIds { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<EventItem> EventItems { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Stock> Stocks { get; set; }
     }
 }

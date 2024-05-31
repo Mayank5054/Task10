@@ -4,45 +4,49 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="939956b054ef4b9f8092b10b46ade23d" Name="Diagram1" ZoomLevel="69">
-        <EntityTypeShape EntityType="ExamModel.Dish" Width="1.5" PointX="1.625" PointY="6.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="ExamModel.DishItem" Width="1.5" PointX="11" PointY="6" IsExpanded="true" />
-        <EntityTypeShape EntityType="ExamModel.OrderItem" Width="1.5" PointX="2.75" PointY="0.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="ExamModel.Order" Width="1.5" PointX="10.75" PointY="2.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="ExamModel.Product" Width="1.5" PointX="5" PointY="5.625" IsExpanded="true" />
-        <EntityTypeShape EntityType="ExamModel.User" Width="1.5" PointX="5.875" PointY="1.125" IsExpanded="true" />
+      <Diagram DiagramId="939956b054ef4b9f8092b10b46ade23d" Name="Diagram1" ZoomLevel="44">
+        <EntityTypeShape EntityType="ExamModel.Dish" Width="1.5" PointX="5.375" PointY="5.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="ExamModel.DishItem" Width="1.5" PointX="15.625" PointY="5.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="ExamModel.OrderItem" Width="1.5" PointX="27.75" PointY="11.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="ExamModel.Order" Width="1.5" PointX="18.375" PointY="13.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="ExamModel.Product" Width="1.5" PointX="8.375" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="ExamModel.User" Width="1.5" PointX="23.5" PointY="18" IsExpanded="true" />
         <AssociationConnector Association="ExamModel.FK__Dish__ItemID__300424B4" ManuallyRouted="false" />
         <AssociationConnector Association="ExamModel.FK__DishItem__DishId__32E0915F" ManuallyRouted="false" />
         <AssociationConnector Association="ExamModel.FK__DishItem__ItemID__33D4B598" ManuallyRouted="false" />
         <AssociationConnector Association="ExamModel.FK__OrderItem__ItemI__2D27B809" ManuallyRouted="false" />
         <AssociationConnector Association="ExamModel.FK__OrderItem__Order__2C3393D0" ManuallyRouted="false" />
         <AssociationConnector Association="ExamModel.FK__Orders__Customer__29572725" ManuallyRouted="false" />
-        <EntityTypeShape EntityType="ExamModel.Cart" Width="1.5" PointX="0.75" PointY="10.625" />
-        <EntityTypeShape EntityType="ExamModel.CartItemId" Width="1.5" PointX="5.75" PointY="10.125" />
+        <EntityTypeShape EntityType="ExamModel.Cart" Width="1.5" PointX="3" PointY="9.125" />
+        <EntityTypeShape EntityType="ExamModel.CartItemId" Width="1.5" PointX="9.875" PointY="15.375" />
         <AssociationConnector Association="ExamModel.FK__Cart__UserId__36B12243" />
         <AssociationConnector Association="ExamModel.FK__CartItemI__CartI__398D8EEE" />
         <AssociationConnector Association="ExamModel.FK__CartItemI__ItemI__3A81B327" />
-        <EntityTypeShape EntityType="ExamModel.Event" Width="1.5" PointX="3.25" PointY="10.625" />
-        <EntityTypeShape EntityType="ExamModel.EventItem" Width="1.5" PointX="8" PointY="9.625" />
+        <EntityTypeShape EntityType="ExamModel.Event" Width="1.5" PointX="5.875" PointY="11.625" />
+        <EntityTypeShape EntityType="ExamModel.EventItem" Width="1.5" PointX="12.875" PointY="6.625" />
         <AssociationConnector Association="ExamModel.FK__Event__UserId__2739D489" />
         <AssociationConnector Association="ExamModel.FK__EventItem__Event__59063A47" />
         <AssociationConnector Association="ExamModel.FK__EventItem__ItemI__59FA5E80" />
-        <EntityTypeShape EntityType="ExamModel.OrderRefund" Width="1.5" PointX="14.25" PointY="2.625" />
-        <EntityTypeShape EntityType="ExamModel.Overtime" Width="1.5" PointX="8.125" PointY="0.75" />
+        <EntityTypeShape EntityType="ExamModel.OrderRefund" Width="1.5" PointX="18.125" PointY="1.375" />
+        <EntityTypeShape EntityType="ExamModel.Overtime" Width="1.5" PointX="22.375" PointY="12" />
         <AssociationConnector Association="ExamModel.FK__OrderRefu__Order__3E52440B" />
         <AssociationConnector Association="ExamModel.FK__OrderRefu__Order__3D5E1FD2" />
         <AssociationConnector Association="ExamModel.FK__Overtime__UserId__4D94879B" />
-        <EntityTypeShape EntityType="ExamModel.Leave" Width="1.5" PointX="8.125" PointY="4.375" />
+        <EntityTypeShape EntityType="ExamModel.Leave" Width="1.5" PointX="9" PointY="0.5" />
         <AssociationConnector Association="ExamModel.FK__Leave__UserId__4AB81AF0" />
-        <EntityTypeShape EntityType="ExamModel.CookingSession" Width="1.5" PointX="8.125" PointY="14" />
-        <EntityTypeShape EntityType="ExamModel.CookingSessionAttendee" Width="1.5" PointX="10.375" PointY="10.5" />
+        <EntityTypeShape EntityType="ExamModel.CookingSession" Width="1.5" PointX="13.375" PointY="12.125" />
+        <EntityTypeShape EntityType="ExamModel.CookingSessionAttendee" Width="1.5" PointX="16" PointY="15.125" />
         <AssociationConnector Association="ExamModel.FK__CookingSe__Sessi__656C112C" />
         <AssociationConnector Association="ExamModel.FK__CookingSe__Trani__628FA481" />
         <AssociationConnector Association="ExamModel.FK__CookingSe__Atten__66603565" />
-        <EntityTypeShape EntityType="ExamModel.DineInTable" Width="1.5" PointX="14" PointY="20.25" />
-        <EntityTypeShape EntityType="ExamModel.ReservedTable" Width="1.5" PointX="16.25" PointY="0.5" />
+        <EntityTypeShape EntityType="ExamModel.DineInTable" Width="1.5" PointX="32.875" PointY="7.25" />
+        <EntityTypeShape EntityType="ExamModel.ReservedTable" Width="1.5" PointX="30.5" PointY="2.125" />
         <AssociationConnector Association="ExamModel.FK__ReservedT__Table__5EBF139D" />
         <AssociationConnector Association="ExamModel.FK__ReservedT__UserI__5FB337D6" />
+        <EntityTypeShape EntityType="ExamModel.Discount" Width="1.5" PointX="17.875" PointY="9.625" />
+        <EntityTypeShape EntityType="ExamModel.Stock" Width="1.5" PointX="21.375" PointY="7.625" />
+        <AssociationConnector Association="ExamModel.FK__Stocks__ItemId__47DBAE45" />
+        <AssociationConnector Association="ExamModel.FK_Stocks_Users" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

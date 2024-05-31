@@ -1,0 +1,107 @@
+﻿@model Task10.Models.Discount
+
+@{
+    Layout = null;
+}
+
+<form id="DiscountForm">
+    @*@using (Html.BeginForm("SaveDiscount", "Discount", FormMethod.Post, new { @id = "DiscountForm" }))*@
+    @*{  *@
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger", @id = "validationMsg" })
+        @Html.HiddenFor(model => model.DiscountId)
+
+
+        @if (Model.DiscountId == 0)
+        {
+        <div class="form-group">
+            @Html.LabelFor(model => model.CouponName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.CouponName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.CouponName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        }
+        else
+        {
+        <div class="form-group">
+            @Html.LabelFor(model => model.CouponName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.CouponName, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled", @Value = Model.CouponName } })
+                @Html.ValidationMessageFor(model => model.CouponName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        }
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.From, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.From, new { htmlAttributes = new { @class = "form-control", type = "date" } })
+                @Html.ValidationMessageFor(model => model.From, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.To, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.To, new { htmlAttributes = new { @class = "form-control", type = "date" } })
+                @Html.ValidationMessageFor(model => model.To, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Type, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div>
+                    Flat:
+                    @Html.RadioButtonFor(model => model.Type, "Flate")
+                    Percentage:
+                    @Html.RadioButtonFor(model => model.Type, "Percentage")
+                </div>
+                @Html.ValidationMessageFor(model => model.Type, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Value, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Value, new { htmlAttributes = new { @class = "form-control", type = "number", min = "0" } })
+                @Html.ValidationMessageFor(model => model.Value, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.NumberOfTimes, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.NumberOfTimes, new { htmlAttributes = new { @class = "form-control", type = "number", min = "0" } })
+                @Html.ValidationMessageFor(model => model.NumberOfTimes, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.MaxDiscount, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.MaxDiscount, new { htmlAttributes = new { @class = "form-control", type = "number", min = "0", step = "0.01" } })
+                @Html.ValidationMessageFor(model => model.MaxDiscount, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @if (Model.DiscountId == 0)
+            {
+            <input type="submit" value="Create" class="btn btn-success addDiscount" />
+            }
+            else
+            {
+            <input type="submit" value="Update" class="btn btn-success addDiscount" />
+            }
+        </div>
+    </div>
+    @*}*@
+</form>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

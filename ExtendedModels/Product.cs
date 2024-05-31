@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
@@ -36,5 +37,11 @@ namespace Task10.Models
             public Nullable<int> Isdeleted { get; set; }
 
         }
+        [NotMapped]
+        public int TotalStock { get; set; }
+        [NotMapped]
+        public int RemainingStock { get; set; }
+        [NotMapped]
+        public string IsLowStock { get; set; }
     }
 }

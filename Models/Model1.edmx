@@ -67,6 +67,23 @@
           <Property Name="CreatedBy" Type="int" />
           <Property Name="IsDeleted" Type="int" />
         </EntityType>
+        <EntityType Name="Discount">
+          <Key>
+            <PropertyRef Name="DiscountId" />
+          </Key>
+          <Property Name="DiscountId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="From" Type="datetime" />
+          <Property Name="To" Type="datetime" />
+          <Property Name="Type" Type="varchar" MaxLength="255" />
+          <Property Name="Value" Type="decimal" Precision="10" Scale="2" />
+          <Property Name="NumberOfTimes" Type="int" />
+          <Property Name="MaxDiscount" Type="decimal" Precision="10" Scale="2" />
+          <Property Name="CouponName" Type="varchar" MaxLength="255" />
+          <Property Name="CreatedOn" Type="datetime" />
+          <Property Name="UpdatedOn" Type="datetime" />
+          <Property Name="CreatedBy" Type="int" />
+          <Property Name="IsDeleted" Type="int" />
+        </EntityType>
         <EntityType Name="Dish">
           <Key>
             <PropertyRef Name="DishId" />
@@ -228,6 +245,21 @@
           <Property Name="NoOFPeople" Type="int" />
           <Property Name="FromDateTime" Type="datetime" />
           <Property Name="ToDateTime" Type="datetime" />
+          <Property Name="CreatedOn" Type="datetime" />
+          <Property Name="UpdatedOn" Type="datetime" />
+          <Property Name="CreatedBy" Type="int" />
+          <Property Name="IsDeleted" Type="int" />
+        </EntityType>
+        <EntityType Name="Stocks">
+          <Key>
+            <PropertyRef Name="StockId" />
+          </Key>
+          <Property Name="StockId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ItemId" Type="int" />
+          <Property Name="Qty" Type="int" />
+          <Property Name="Type" Type="varchar" MaxLength="255" />
+          <Property Name="VendorId" Type="int" />
+          <Property Name="Date" Type="date" />
           <Property Name="CreatedOn" Type="datetime" />
           <Property Name="UpdatedOn" Type="datetime" />
           <Property Name="CreatedBy" Type="int" />
@@ -501,6 +533,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK__Stocks__ItemId__47DBAE45">
+          <End Role="Products" Type="Self.Products" Multiplicity="0..1" />
+          <End Role="Stocks" Type="Self.Stocks" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Products">
+              <PropertyRef Name="ProductId" />
+            </Principal>
+            <Dependent Role="Stocks">
+              <PropertyRef Name="ItemId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Stocks_Users">
+          <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
+          <End Role="Stocks" Type="Self.Stocks" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Stocks">
+              <PropertyRef Name="CreatedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Function Name="new_get_notReserved_Table_forBooking" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="fromDate" Type="datetime" Mode="In" />
           <Parameter Name="toDate" Type="datetime" Mode="In" />
@@ -519,6 +575,7 @@
           <EntitySet Name="CookingSession" EntityType="Self.CookingSession" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CookingSessionAttendee" EntityType="Self.CookingSessionAttendee" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DineInTables" EntityType="Self.DineInTables" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Discount" EntityType="Self.Discount" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Dish" EntityType="Self.Dish" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DishItem" EntityType="Self.DishItem" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Event" EntityType="Self.Event" Schema="dbo" store:Type="Tables" />
@@ -530,6 +587,7 @@
           <EntitySet Name="Overtime" EntityType="Self.Overtime" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Products" EntityType="Self.Products" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ReservedTable" EntityType="Self.ReservedTable" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Stocks" EntityType="Self.Stocks" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK__Cart__UserId__36B12243" Association="Self.FK__Cart__UserId__36B12243">
             <End Role="Users" EntitySet="Users" />
@@ -614,6 +672,14 @@
           <AssociationSet Name="FK__ReservedT__UserI__5FB337D6" Association="Self.FK__ReservedT__UserI__5FB337D6">
             <End Role="Users" EntitySet="Users" />
             <End Role="ReservedTable" EntitySet="ReservedTable" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Stocks__ItemId__47DBAE45" Association="Self.FK__Stocks__ItemId__47DBAE45">
+            <End Role="Products" EntitySet="Products" />
+            <End Role="Stocks" EntitySet="Stocks" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Stocks_Users" Association="Self.FK_Stocks_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Stocks" EntitySet="Stocks" />
           </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -710,6 +776,7 @@
           <NavigationProperty Name="OrderItems" Relationship="Self.FK__OrderItem__ItemI__2D27B809" FromRole="Products" ToRole="OrderItems" />
           <NavigationProperty Name="CartItemIds" Relationship="ExamModel.FK__CartItemI__ItemI__3A81B327" FromRole="Product" ToRole="CartItemId" />
           <NavigationProperty Name="EventItems" Relationship="ExamModel.FK__EventItem__ItemI__59FA5E80" FromRole="Product" ToRole="EventItem" />
+          <NavigationProperty Name="Stocks" Relationship="ExamModel.FK__Stocks__ItemId__47DBAE45" FromRole="Product" ToRole="Stock" />
         </EntityType>
         <EntityType Name="User">
           <Key>
@@ -734,6 +801,7 @@
           <NavigationProperty Name="CookingSessions" Relationship="ExamModel.FK__CookingSe__Trani__628FA481" FromRole="User" ToRole="CookingSession" />
           <NavigationProperty Name="CookingSessionAttendees" Relationship="ExamModel.FK__CookingSe__Atten__66603565" FromRole="User" ToRole="CookingSessionAttendee" />
           <NavigationProperty Name="ReservedTables" Relationship="ExamModel.FK__ReservedT__UserI__5FB337D6" FromRole="User" ToRole="ReservedTable" />
+          <NavigationProperty Name="Stocks" Relationship="ExamModel.FK_Stocks_Users" FromRole="User" ToRole="Stock" />
         </EntityType>
         <Association Name="FK__Dish__ItemID__300424B4">
           <End Role="Products" Type="Self.Product" Multiplicity="0..1" />
@@ -921,6 +989,16 @@
             <Parameter Name="toDate" Mode="In" Type="DateTime" />
             <Parameter Name="noofPeoples" Mode="In" Type="Int32" />
           </FunctionImport>
+          <EntitySet Name="Discounts" EntityType="ExamModel.Discount" />
+          <EntitySet Name="Stocks" EntityType="ExamModel.Stock" />
+          <AssociationSet Name="FK__Stocks__ItemId__47DBAE45" Association="ExamModel.FK__Stocks__ItemId__47DBAE45">
+            <End Role="Product" EntitySet="Products" />
+            <End Role="Stock" EntitySet="Stocks" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Stocks_Users" Association="ExamModel.FK_Stocks_Users">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Stock" EntitySet="Stocks" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="Cart">
           <Key>
@@ -1307,6 +1385,64 @@
           <Property Type="DateTime" Name="FromDateTime" Nullable="true" Precision="23" />
           <Property Type="DateTime" Name="ToDateTime" Nullable="true" Precision="23" />
         </ComplexType>
+        <EntityType Name="Discount">
+          <Key>
+            <PropertyRef Name="DiscountId" />
+          </Key>
+          <Property Name="DiscountId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="From" Type="DateTime" Precision="3" />
+          <Property Name="To" Type="DateTime" Precision="3" />
+          <Property Name="Type" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Value" Type="Decimal" Precision="10" Scale="2" />
+          <Property Name="NumberOfTimes" Type="Int32" />
+          <Property Name="MaxDiscount" Type="Decimal" Precision="10" Scale="2" />
+          <Property Name="CouponName" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="CreatedOn" Type="DateTime" Precision="3" />
+          <Property Name="UpdatedOn" Type="DateTime" Precision="3" />
+          <Property Name="CreatedBy" Type="Int32" />
+          <Property Name="IsDeleted" Type="Int32" />
+        </EntityType>
+        <EntityType Name="Stock">
+          <Key>
+            <PropertyRef Name="StockId" />
+          </Key>
+          <Property Name="StockId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ItemId" Type="Int32" />
+          <Property Name="Qty" Type="Int32" />
+          <Property Name="Type" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="VendorId" Type="Int32" />
+          <Property Name="Date" Type="DateTime" Precision="0" />
+          <Property Name="CreatedOn" Type="DateTime" Precision="3" />
+          <Property Name="UpdatedOn" Type="DateTime" Precision="3" />
+          <Property Name="CreatedBy" Type="Int32" />
+          <Property Name="IsDeleted" Type="Int32" />
+          <NavigationProperty Name="Product" Relationship="ExamModel.FK__Stocks__ItemId__47DBAE45" FromRole="Stock" ToRole="Product" />
+          <NavigationProperty Name="User" Relationship="ExamModel.FK_Stocks_Users" FromRole="Stock" ToRole="User" />
+        </EntityType>
+        <Association Name="FK__Stocks__ItemId__47DBAE45">
+          <End Type="ExamModel.Product" Role="Product" Multiplicity="0..1" />
+          <End Type="ExamModel.Stock" Role="Stock" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="ProductId" />
+            </Principal>
+            <Dependent Role="Stock">
+              <PropertyRef Name="ItemId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Stocks_Users">
+          <End Type="ExamModel.User" Role="User" Multiplicity="0..1" />
+          <End Type="ExamModel.Stock" Role="Stock" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Stock">
+              <PropertyRef Name="CreatedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1620,6 +1756,40 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <EntitySetMapping Name="Discounts">
+            <EntityTypeMapping TypeName="ExamModel.Discount">
+              <MappingFragment StoreEntitySet="Discount">
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="UpdatedOn" ColumnName="UpdatedOn" />
+                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+                <ScalarProperty Name="CouponName" ColumnName="CouponName" />
+                <ScalarProperty Name="MaxDiscount" ColumnName="MaxDiscount" />
+                <ScalarProperty Name="NumberOfTimes" ColumnName="NumberOfTimes" />
+                <ScalarProperty Name="Value" ColumnName="Value" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="To" ColumnName="To" />
+                <ScalarProperty Name="From" ColumnName="From" />
+                <ScalarProperty Name="DiscountId" ColumnName="DiscountId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Stocks">
+            <EntityTypeMapping TypeName="ExamModel.Stock">
+              <MappingFragment StoreEntitySet="Stocks">
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="UpdatedOn" ColumnName="UpdatedOn" />
+                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="VendorId" ColumnName="VendorId" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="Qty" ColumnName="Qty" />
+                <ScalarProperty Name="ItemId" ColumnName="ItemId" />
+                <ScalarProperty Name="StockId" ColumnName="StockId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

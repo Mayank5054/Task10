@@ -44,6 +44,8 @@ namespace Task10.Models
         public virtual DbSet<CookingSessionAttendee> CookingSessionAttendees { get; set; }
         public virtual DbSet<DineInTable> DineInTables { get; set; }
         public virtual DbSet<ReservedTable> ReservedTables { get; set; }
+        public virtual DbSet<Discount> Discounts { get; set; }
+        public virtual DbSet<Stock> Stocks { get; set; }
     
         public virtual ObjectResult<sp_orderDetails_Result> sp_orderDetails(Nullable<int> id)
         {

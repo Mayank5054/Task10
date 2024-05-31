@@ -11,7 +11,7 @@
     @Scripts.Render("~/bundles/bootstrap")
     <script src="~/Scripts/CustomJs/AjaxCall.js"></script>
     <script src="~/Scripts/jquery.validate.min.js"></script>
-
+    <script src="~/Content/Custom.js"></script>
     <link href="~/Content/datatables.min.css" rel="stylesheet" />
     <script src="~/Scripts/datatables.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css"
@@ -38,6 +38,7 @@
                     <li>@Html.ActionLink("Register User", "RegisterUser", "Authentication", new { area = "" }, new { @class = "nav-link" })
                     <li>@Html.ActionLink("LogOut", "logout", "Authentication", new { area = "" }, new { @class = "nav-link" })</li>
                     <li>@Html.ActionLink("Cart", "Index", "Cart", new { area = "" }, new { @class = "nav-link" })</li>
+                    <li><p class="nav-link discountLink">Discounts</p></li>
                 </ul>
             </div>
         </div>
