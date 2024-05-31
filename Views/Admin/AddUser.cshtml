@@ -1,0 +1,199 @@
+﻿
+@{
+    ViewBag.Title = "AddUser";
+}
+
+@using Task10.Models
+@model User
+
+<div class="container">
+    <h1>Add a Cook or Cashier</h1>
+    <form class="SignUpForm was-validated" method="post"  id="SignUpForm" >
+
+        <div class="mb-3 d-flex flex-column">
+            <label for="name" class="form-label">Full Name</label>
+            @Html.TextBoxFor(m => m.Fullname, new { @class = "name", @required = "required" })
+        </div>
+        <div class="mb-3 d-flex flex-column">
+            <label for="email" class="form-label">Email</label>
+            @Html.TextBoxFor(m => m.Email, new { @class = "email", @name = "email", @required = "required" })
+        </div>
+        <div class="mb-3 d-flex flex-column">
+            <label for="password" class="form-label">Password</label>
+            @Html.TextBoxFor(m => m.Password, new { @type = "password", @class = "password", @required = "required" })
+        </div>
+        <div class="mb-3 d-flex flex-column">
+            <label for="phoneNo" class="form-label">Contact Number</label>
+            @Html.TextBoxFor(m => m.ContactNo, new { @class = "phoneNo", @required = "required" })
+        </div>
+        <div class="mb-3 d-flex flex-column">
+            <label for="dob" class="form-label">Date Of Birth</label>
+            @Html.TextBoxFor(m => m.BirthDate, new { @type = "date", @class = "dob", @required = "required" })
+        </div>
+        <div class="col-4 mb-3">
+            <label for="department" class="form-label">Department ID</label>
+            @Html.DropDownListFor(m => m.Type,
+           new SelectList(ViewBag.Departments, "Value", "Text"),
+
+                    new { @class = "form-control", id = "department" })
+        </div>
+        <button type="submit" class="btn btn-primary submitButton">Submit</button>
+    </form>
+</div>
+
+@section Scripts{
+    <script>
+
+                let a = 0;
+                let b = 0;
+                let c = 0;
+                let d = 0;
+                let e = 0;
+            let error = document.createElement('span');
+            error.setAttribute("class", "remove");
+
+            $('.password').on("input", function () {
+                //$(".remove").remove();
+                //$('#Password').css("border", "");
+
+                let remove = $(this).closest('.remove');
+                let value = $(this).val();
+                let validate = /^.*(?=.{8,})(?=.*[a-zA-Z])(?=.*\d)(?=.*[!#$%&? "]).*$/;
+                if (!validate.test(value))
+                {
+                    error.innerHTML = "Password should contain one big alphabet, one small alphabet, one digit, one special characrter";
+                    error.style.color = "red";
+                    $('#Password').css("outline", "2px solid red");
+                    $('#Password').parent().append(error);
+                    a = 0;
+                }
+                else
+                {
+                    if (remove) {
+
+                        $(".remove").remove();
+                    }
+                    $('#Password').css("outline", "");
+                    a = 1;
+                }
+            })
+
+            $('.name').on("input", function () {
+                $(".remove").remove();
+
+
+                let value = $(this).val();
+                let validate = /^[A-Za-z\s]+$/;
+
+                if (!validate.test(value)) {
+                    error.innerHTML = "Full Name should only contain alphabets";
+                    error.style.color = "red";
+                    $('.name').css("outline", "2px solid red");
+                    $('.name').parent().append(error);
+                    b = 0;
+                }
+                else {
+                    $(".remove").remove();
+                    $('.name').css("outline", "");
+                    b = 1;
+                }
+            })
+
+         var users = @Html.Raw(Json.Encode(ViewBag.Users));
+        $('.email').on("input", function () {
+                $(".remove").remove();
+
+            var email = $('.email').val();
+            if (users.includes(email)) {
+                error.innerHTML = "Email Already Exist";
+                error.style.color = "red";
+                $('.email').css("outline", "2px solid red");
+                $('.email').parent().append(error);
+                c = 0;
+                }
+                else {
+                    $(".remove").remove();
+                    $('.email').css("outline", "");
+                    c = 1;
+                }
+        })
+
+
+            $('.phoneNo').on("input", function () {
+                let value = $(this).val();
+                let validate = /[1-9]{2}\d{8}/;
+
+
+                let remove = $(this).closest('.remove');
+
+                if (!validate.test(value)) {
+                    error.innerHTML = "Should have 10 digits and cannot start with 0";
+                    error.style.color = "red";
+                    $('.phoneNo').css("outline", "2px solid red");
+                    $('.phoneNo').parent().append(error);
+                    d = 0;
+                }
+                else {
+                    if (remove) {
+
+                        $(".remove").remove();
+                    }
+                    $('.phoneNo').css("outline", "");
+                    d = 1;
+                }
+            })
+
+            $('.dob').on("input", function () {
+
+                let value = $(this).val();
+                var date = new Date();
+                let remove = $(this).closest('.remove');
+                var dateValue = new Date(value);
+                if ((date.getFullYear() - dateValue.getFullYear() <= 18) || (date.getFullYear() - dateValue.getFullYear() == 18 && date.getMonth() < dateValue.getMonth()) || (date.getFullYear() - dateValue.getFullYear() == 18 && date.getMonth() == dateValue.getMonth() && date.getDate() < dateValue.getDate()))
+                {
+                    error.innerHTML = "Should be of atleast 18 years of age";
+                    error.style.color = "red";
+                    $('.dob').css("outline", "2px solid red");
+                    $('.dob').parent().append(error);
+                    e = 0;
+                }
+                else {
+
+                    if (remove) {
+
+                        $(".remove").remove();
+                    }
+                    $('.dob').css("outline", "");
+                    e = 1;
+                }
+            })
+
+        $(document).on('submit', '#SignUpForm', function (event) {
+            event.preventDefault();
+            let flag = a + b + c + d + e;
+            if (flag == 5) {
+                var form = $("#SignUpForm").get(0);
+                var user = new FormData(form);
+                console.log(user);
+                $.ajax({
+                    type: "POST",
+                    Url: "/Admin/AddUser",
+                    processData: false,
+                    contentType: false,
+                    data: user,
+                    success: function (data) {
+                        alert("User SignUp Successfull");
+                        window.location.href = '/Main/Index';
+                    },
+                    error: function (ex) {
+                        alert("Error Occured");
+
+                    }
+                })
+            }
+            else {
+                alert("please enter proper data and empty fields are not allowed");
+            }
+        })
+    </script>
+    }

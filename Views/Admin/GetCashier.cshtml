@@ -1,0 +1,37 @@
+﻿@{
+    ViewBag.Title = "GetCashier";
+}
+
+@using Task10.Models
+@model List<User>
+
+    <div class="container">
+        <center><h1>All Cashier</h1></center>
+        <div class="container" style="box-shadow: 2px 2px 22px 2px;padding:30px;margin-top:40px;">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">CashierID</th>
+                        <th scope="col">Cashier Name</th>
+                        <th scope="col">Contact Number</th>
+                        <th scope="col">Type</th>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var User in Model)
+                    {
+                    <tr>
+                        <td>@User.UserId</td>
+                        <td>@User.Fullname</td>
+                        <td>@User.ContactNo</td>
+                        <td>@User.Type</td>
+                        <td><button class="btn btn-primary" onclick="window.location.href = '@Url.Action("EditCook", "Admin" ,new {id=User.UserId})';">Edit</button></td>
+                        <td><button class="btn btn-danger" id="@User.UserId" onclick="window.location.href = '@Url.Action("DeleteCook", "Admin" ,new {id=User.UserId})';">Delete</button></td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>

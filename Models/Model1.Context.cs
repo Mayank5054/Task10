@@ -39,6 +39,7 @@ namespace Task10.Models
         public virtual DbSet<EventItem> EventItems { get; set; }
         public virtual DbSet<OrderRefund> OrderRefunds { get; set; }
         public virtual DbSet<Overtime> Overtimes { get; set; }
+        public virtual DbSet<Leave> Leaves { get; set; }
     
         public virtual ObjectResult<sp_orderDetails_Result> sp_orderDetails(Nullable<int> id)
         {

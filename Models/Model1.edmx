@@ -86,6 +86,24 @@
           <Property Name="CreatedBy" Type="int" />
           <Property Name="IsDeleted" Type="int" />
         </EntityType>
+        <EntityType Name="Leave">
+          <Key>
+            <PropertyRef Name="LeaveId" />
+          </Key>
+          <Property Name="LeaveId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserId" Type="int" />
+          <Property Name="Status" Type="varchar" MaxLength="255" />
+          <Property Name="FromDate" Type="datetime" />
+          <Property Name="ToDate" Type="datetime" />
+          <Property Name="StartDuration" Type="varchar" MaxLength="20" />
+          <Property Name="EndDuration" Type="varchar" MaxLength="20" />
+          <Property Name="Reason" Type="varchar(max)" />
+          <Property Name="ResponseComment" Type="varchar(max)" />
+          <Property Name="CreatedOn" Type="datetime" />
+          <Property Name="UpdatedOn" Type="datetime" />
+          <Property Name="CreatedBy" Type="int" />
+          <Property Name="IsDeleted" Type="int" />
+        </EntityType>
         <EntityType Name="OrderItems">
           <Key>
             <PropertyRef Name="OrderItemId" />
@@ -288,6 +306,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK__Leave__UserId__4AB81AF0">
+          <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
+          <End Role="Leave" Type="Self.Leave" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Leave">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK__OrderItem__ItemI__2D27B809">
           <End Role="Products" Type="Self.Products" Multiplicity="0..1" />
           <End Role="OrderItems" Type="Self.OrderItems" Multiplicity="*" />
@@ -374,6 +404,7 @@
           <EntitySet Name="DishItem" EntityType="Self.DishItem" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Event" EntityType="Self.Event" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="EventItems" EntityType="Self.EventItems" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Leave" EntityType="Self.Leave" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="OrderItems" EntityType="Self.OrderItems" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="OrderRefund" EntityType="Self.OrderRefund" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Orders" EntityType="Self.Orders" Schema="dbo" store:Type="Tables" />
@@ -415,6 +446,10 @@
           <AssociationSet Name="FK__EventItem__ItemI__59FA5E80" Association="Self.FK__EventItem__ItemI__59FA5E80">
             <End Role="Products" EntitySet="Products" />
             <End Role="EventItems" EntitySet="EventItems" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Leave__UserId__4AB81AF0" Association="Self.FK__Leave__UserId__4AB81AF0">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Leave" EntitySet="Leave" />
           </AssociationSet>
           <AssociationSet Name="FK__OrderItem__ItemI__2D27B809" Association="Self.FK__OrderItem__ItemI__2D27B809">
             <End Role="Products" EntitySet="Products" />
@@ -555,6 +590,7 @@
           <NavigationProperty Name="Carts" Relationship="ExamModel.FK__Cart__UserId__36B12243" FromRole="User" ToRole="Cart" />
           <NavigationProperty Name="Events" Relationship="ExamModel.FK__Event__UserId__2739D489" FromRole="User" ToRole="Event" />
           <NavigationProperty Name="Overtimes" Relationship="ExamModel.FK__Overtime__UserId__4D94879B" FromRole="User" ToRole="Overtime" />
+          <NavigationProperty Name="Leaves" Relationship="ExamModel.FK__Leave__UserId__4AB81AF0" FromRole="User" ToRole="Leave" />
         </EntityType>
         <Association Name="FK__Dish__ItemID__300424B4">
           <End Role="Products" Type="Self.Product" Multiplicity="0..1" />
@@ -707,6 +743,11 @@
           <AssociationSet Name="FK__Overtime__UserId__4D94879B" Association="ExamModel.FK__Overtime__UserId__4D94879B">
             <End Role="User" EntitySet="Users" />
             <End Role="Overtime" EntitySet="Overtimes" />
+          </AssociationSet>
+          <EntitySet Name="Leaves" EntityType="ExamModel.Leave" />
+          <AssociationSet Name="FK__Leave__UserId__4AB81AF0" Association="ExamModel.FK__Leave__UserId__4AB81AF0">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Leave" EntitySet="Leaves" />
           </AssociationSet>
         </EntityContainer>
         <EntityType Name="Cart">
@@ -934,6 +975,37 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="Leave">
+          <Key>
+            <PropertyRef Name="LeaveId" />
+          </Key>
+          <Property Name="LeaveId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="Int32" />
+          <Property Name="Status" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="FromDate" Type="DateTime" Precision="3" />
+          <Property Name="ToDate" Type="DateTime" Precision="3" />
+          <Property Name="StartDuration" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="EndDuration" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Reason" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="ResponseComment" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="CreatedOn" Type="DateTime" Precision="3" />
+          <Property Name="UpdatedOn" Type="DateTime" Precision="3" />
+          <Property Name="CreatedBy" Type="Int32" />
+          <Property Name="IsDeleted" Type="Int32" />
+          <NavigationProperty Name="User" Relationship="ExamModel.FK__Leave__UserId__4AB81AF0" FromRole="Leave" ToRole="User" />
+        </EntityType>
+        <Association Name="FK__Leave__UserId__4AB81AF0">
+          <End Type="ExamModel.User" Role="User" Multiplicity="0..1" />
+          <End Type="ExamModel.Leave" Role="Leave" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Leave">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1155,6 +1227,25 @@
                 <ScalarProperty Name="ToDate" ColumnName="ToDate" />
                 <ScalarProperty Name="FromDate" ColumnName="FromDate" />
                 <ScalarProperty Name="OvertimeId" ColumnName="OvertimeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Leaves">
+            <EntityTypeMapping TypeName="ExamModel.Leave">
+              <MappingFragment StoreEntitySet="Leave">
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="UpdatedOn" ColumnName="UpdatedOn" />
+                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+                <ScalarProperty Name="ResponseComment" ColumnName="ResponseComment" />
+                <ScalarProperty Name="Reason" ColumnName="Reason" />
+                <ScalarProperty Name="EndDuration" ColumnName="EndDuration" />
+                <ScalarProperty Name="StartDuration" ColumnName="StartDuration" />
+                <ScalarProperty Name="ToDate" ColumnName="ToDate" />
+                <ScalarProperty Name="FromDate" ColumnName="FromDate" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="LeaveId" ColumnName="LeaveId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

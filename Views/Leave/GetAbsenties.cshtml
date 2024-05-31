@@ -1,0 +1,85 @@
+﻿
+@{
+    ViewBag.Title = "GetAbsenties";
+}
+@using ExamTask.Models
+@model List<Leave>
+
+
+<div class="container">
+    <h1>All Leaves</h1>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Leave ID</th>
+                <th scope="col">User ID</th>
+                <th scope="col">Status</th>
+                <th scope="col">From Date</th>
+                <th scope="col">To Date</th>
+                <th scope="col">Start Duration</th>
+                <th scope="col">End Duration</th>
+                <th scope="col">Reason</th>
+                <th scope="col">Comment</th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var Leave in Model)
+            {
+                <tr>
+                    <td>@Leave.LeaveId</td>
+                    <td>@Leave.UserId</td>
+                    <td>@Leave.Status</td>
+                    <td>@Leave.FromDate</td>
+                    <td>@Leave.ToDate</td>
+                    <td>@Leave.StartDuration</td>
+                    <td>@Leave.EndDuration</td>
+                    <td>@Leave.Reason</td>
+                    <td>@Leave.ResponseComment</td>
+                    <td><button class="btn btn-success approve" data-date="@Leave.FromDate" data-userid="@Leave.UserId" data-leaveid="@Leave.LeaveId" data-actionid="1">Approve</button></td>
+                    <td><button class="btn btn-danger approve" data-date="@Leave.FromDate" data-userid="@Leave.UserId" data-leaveid="@Leave.LeaveId" data-actionid="0">Reject</button></td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@section Scripts{
+    <script>
+        var approved = @Html.Raw(Json.Encode(ViewBag.Approved));
+        $(document).on('click', ".approve", function () {
+            var leaveid = $(this).data("leaveid");
+            var actionId = $(this).data("actionid"); // 1 for Approve, 0 for Reject
+            var userId = $(this).data("userid");
+            var fromDate = $(this).data("date");
+
+            // Send an AJAX request
+            $.ajax({
+                type: "POST",
+                url: "/Leave/ApproveLeave",
+                data: {
+                    id: actionId,
+                    leaveid: leaveid,
+                    userId: userId,
+                    fromDate: fromDate
+                },
+                success: function (response) {
+                    if (response == "Another user of same type is already on the leave on that day") {
+                        alert(response); // Optional alert on success
+                    }
+                    else {
+                        alert("action successfull");
+                    }
+                    window.location.reload();
+
+                },
+                error: function (xhr, status, error) {
+                    alert("Another user of same type is already on the leave on that day"); // Handle error
+                }
+            });
+        });
+
+    </script>
+    }

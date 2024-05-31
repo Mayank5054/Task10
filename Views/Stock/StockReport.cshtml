@@ -1,0 +1,43 @@
+﻿
+@{
+    ViewBag.Title = "StockReport";
+}
+@model List<ExamTask.ViewModels.StockReportViewModel>
+
+<div class="container">
+    <center><h1>Stock Report</h1></center>
+
+<div class="container" style="box-shadow: 2px 2px 22px 2px;padding:30px;margin-top:40px;">
+
+    <table class="table" id="myTable">
+        <thead>
+            <tr>
+                <th>Product Name</th>
+                <th>Total Stock</th>
+                <th>Remaining Stock</th>
+                <th>Is Low Key</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.ProductName</td>
+                    <td>@item.TotalStock</td>
+                    <td>@item.RemStock</td>
+                    <td>@item.IsLowKey</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+</div>
+
+@section Scripts{
+    <script>
+        var table = new DataTable('#myTable',{
+
+        });
+    </script>
+    }

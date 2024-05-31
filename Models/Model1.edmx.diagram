@@ -32,6 +32,8 @@
         <AssociationConnector Association="ExamModel.FK__OrderRefu__Order__3E52440B" />
         <AssociationConnector Association="ExamModel.FK__OrderRefu__Order__3D5E1FD2" />
         <AssociationConnector Association="ExamModel.FK__Overtime__UserId__4D94879B" />
+        <EntityTypeShape EntityType="ExamModel.Leave" Width="1.5" PointX="8.125" PointY="4.375" />
+        <AssociationConnector Association="ExamModel.FK__Leave__UserId__4AB81AF0" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

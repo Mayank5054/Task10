@@ -21,6 +21,7 @@ namespace Task10.Models
             this.Carts = new HashSet<Cart>();
             this.Events = new HashSet<Event>();
             this.Overtimes = new HashSet<Overtime>();
+            this.Leaves = new HashSet<Leave>();
         }
     
         public int UserId { get; set; }
@@ -43,5 +44,7 @@ namespace Task10.Models
         public virtual ICollection<Event> Events { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Overtime> Overtimes { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Leave> Leaves { get; set; }
     }
 }

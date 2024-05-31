@@ -1,0 +1,62 @@
+﻿
+@{
+    ViewBag.Title = "EditCashier";
+}
+
+
+@using Task10.Models
+@model User
+
+<div class="container">
+    <h1>Edit Cashier</h1>
+    <form class="editCook" action="@Url.Action("EditCashier","Main")" method="post" id="SignUpForm">
+
+        <div class="mb-3 d-flex flex-column">
+            <label for="name" class="form-label">Cook ID</label>
+            @Html.TextBoxFor(m => m.UserId, new { @class = "name", @required = "required", @readonly = "readonly" })
+        </div>
+        <div class="mb-3 d-flex flex-column">
+            <label for="name" class="form-label">Full Name</label>
+            @Html.TextBoxFor(m => m.Fullname, new { @class = "name", @required = "required" })
+        </div>
+        <div class="mb-3 d-flex flex-column">
+            <label for="email" class="form-label">Email</label>
+            @Html.TextBoxFor(m => m.Email, new { @class = "email", @name = "email", @required = "required", @readonly = "readonly" })
+        </div>
+        <div class="mb-3 d-flex flex-column">
+            <label for="phoneNo" class="form-label">Contact Number</label>
+            @Html.TextBoxFor(m => m.ContactNo, new { @class = "phoneNo", @required = "required" })
+        </div>
+        <div class="col-4 mb-3">
+            <label for="department" class="form-label">Department ID</label>
+            @Html.DropDownListFor(m => m.Type,
+           new SelectList(ViewBag.Departments, "Value", "Text"),
+
+                    new { @class = "form-control", id = "department" })
+        </div>
+        <button type="button" class="btn btn-primary submitButton">Submit</button>
+    </form>
+</div>
+
+@section Scripts{
+    <script>
+        $(document).on('click', '.submitButton', function () {
+            var form = $("#SignUpForm").get(0);
+            var user = new FormData(form);
+            $.ajax({
+                type: "POST",
+                Url: "/Admin/EditCashier",
+                data: user,
+                contentType: false,
+                processData: false,
+                success: function (data) {
+                    alert("User edited successfully");
+                },
+                error: function (ex) {
+
+                }
+            })
+        })
+    </script>
+}
+

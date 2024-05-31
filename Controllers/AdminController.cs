@@ -103,5 +103,116 @@ namespace Task10.Controllers
             List<Product> products = _db.Products.Where(p => p.Isdeleted == 0).ToList();
             return View(products);
         }
+
+        public ActionResult AddUser()
+        {
+            var departments = new List<SelectListItem>
+            {
+                new SelectListItem { Text = "cook", Value = "cook" },
+                new SelectListItem { Text = "cashier", Value = "cashier" }
+
+            };
+            ViewBag.Departments = departments;
+            var users = _db.Users.Select(m => m.Email).ToList();
+            ViewBag.Users = users;
+            return View("AddUser");
+        }
+        [HttpPost]
+        public ActionResult AddUser(User model)
+        {
+            _db.Users.Add(model);
+            _db.SaveChanges();
+            return RedirectToAction("Index", "Admin");
+        }
+
+        //Action to get all cooks
+        public ActionResult GetCook()
+        {
+            var user = Session["UserId"];
+            if (user != null)
+            {
+                var users = _db.Users.Where(m => m.Type == "cook" && m.Isdeleted != 1).ToList();
+                return View("GetCook", users);
+            }
+            else
+            {
+                return RedirectToAction("Login", "Authentication");
+            }
+
+        }
+
+        //Action to edit cooks and cashier
+        public ActionResult EditCook(int id)
+        {
+
+            var user = Session["UserId"];
+            if (user != null)
+            {
+                var users = _db.Users.Where(m => m.UserId == id).FirstOrDefault();
+                var departments = new List<SelectListItem>
+                {
+                    new SelectListItem { Text = "cook", Value = "cook" },
+                    new SelectListItem { Text = "cashier", Value = "cashier" }
+
+                };
+                ViewBag.Departments = departments;
+                return View("EditCook", users);
+            }
+            else
+            {
+                return RedirectToAction("Login", "Authentication");
+            }
+
+
+        }
+        [HttpPost]
+        public ActionResult EditCook(User model)
+        {
+            var user = Session["UserId"];
+            if (user != null)
+            {
+                User users = _db.Users.Where(m => m.UserId == model.UserId).FirstOrDefault();
+                if (ModelState.IsValid)
+                {
+                    users.Fullname = model.Fullname;
+                    users.Type = model.Type;
+                    users.ContactNo = model.ContactNo;
+            
+                    _db.SaveChanges();
+                }
+                return Json(new { status="success"});
+            }
+            else
+            {
+                return RedirectToAction("Login", "Authentication");
+            }
+        }
+
+        //Action to delete cooks and cashier
+        public ActionResult DeleteCook(int id)
+        {
+            var user = _db.Users.Where(m => m.UserId == id).FirstOrDefault();
+            user.Isdeleted = 1;
+            _db.SaveChanges();
+            return RedirectToAction("Index", "Admin");
+        }
+
+
+        //Action to get all cashiers
+        public ActionResult GetCashier()
+        {
+            var user = Session["UserId"];
+            if (user != null)
+            {
+                var users = _db.Users.Where(m => m.Type == "cashier" && m.Isdeleted == 0).ToList();
+
+                return View("GetCashier", users);
+            }
+            else
+            {
+                return RedirectToAction("Login", "Authentication");
+            }
+        }
+
     }
     }
