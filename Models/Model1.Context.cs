@@ -40,6 +40,10 @@ namespace Task10.Models
         public virtual DbSet<OrderRefund> OrderRefunds { get; set; }
         public virtual DbSet<Overtime> Overtimes { get; set; }
         public virtual DbSet<Leave> Leaves { get; set; }
+        public virtual DbSet<CookingSession> CookingSessions { get; set; }
+        public virtual DbSet<CookingSessionAttendee> CookingSessionAttendees { get; set; }
+        public virtual DbSet<DineInTable> DineInTables { get; set; }
+        public virtual DbSet<ReservedTable> ReservedTables { get; set; }
     
         public virtual ObjectResult<sp_orderDetails_Result> sp_orderDetails(Nullable<int> id)
         {
@@ -61,6 +65,23 @@ namespace Task10.Models
                 new ObjectParameter("IsDelete", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_orderRefund_Result>("sp_orderRefund", idParameter, isDeleteParameter);
+        }
+    
+        public virtual ObjectResult<new_get_notReserved_Table_forBooking_Result> new_get_notReserved_Table_forBooking(Nullable<System.DateTime> fromDate, Nullable<System.DateTime> toDate, Nullable<int> noofPeoples)
+        {
+            var fromDateParameter = fromDate.HasValue ?
+                new ObjectParameter("fromDate", fromDate) :
+                new ObjectParameter("fromDate", typeof(System.DateTime));
+    
+            var toDateParameter = toDate.HasValue ?
+                new ObjectParameter("toDate", toDate) :
+                new ObjectParameter("toDate", typeof(System.DateTime));
+    
+            var noofPeoplesParameter = noofPeoples.HasValue ?
+                new ObjectParameter("noofPeoples", noofPeoples) :
+                new ObjectParameter("noofPeoples", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<new_get_notReserved_Table_forBooking_Result>("new_get_notReserved_Table_forBooking", fromDateParameter, toDateParameter, noofPeoplesParameter);
         }
     }
 }

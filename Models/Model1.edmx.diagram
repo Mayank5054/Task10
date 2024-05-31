@@ -34,6 +34,15 @@
         <AssociationConnector Association="ExamModel.FK__Overtime__UserId__4D94879B" />
         <EntityTypeShape EntityType="ExamModel.Leave" Width="1.5" PointX="8.125" PointY="4.375" />
         <AssociationConnector Association="ExamModel.FK__Leave__UserId__4AB81AF0" />
+        <EntityTypeShape EntityType="ExamModel.CookingSession" Width="1.5" PointX="8.125" PointY="14" />
+        <EntityTypeShape EntityType="ExamModel.CookingSessionAttendee" Width="1.5" PointX="10.375" PointY="10.5" />
+        <AssociationConnector Association="ExamModel.FK__CookingSe__Sessi__656C112C" />
+        <AssociationConnector Association="ExamModel.FK__CookingSe__Trani__628FA481" />
+        <AssociationConnector Association="ExamModel.FK__CookingSe__Atten__66603565" />
+        <EntityTypeShape EntityType="ExamModel.DineInTable" Width="1.5" PointX="14" PointY="20.25" />
+        <EntityTypeShape EntityType="ExamModel.ReservedTable" Width="1.5" PointX="16.25" PointY="0.5" />
+        <AssociationConnector Association="ExamModel.FK__ReservedT__Table__5EBF139D" />
+        <AssociationConnector Association="ExamModel.FK__ReservedT__UserI__5FB337D6" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -1,0 +1,43 @@
+﻿
+@{
+    ViewBag.Title = "CreateTablebyAdmin";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using Task10.Models
+@model DineInTable
+<main>
+    <div class="container">
+
+
+        @using (Html.BeginForm("SaveTablebyAdmin", "Home", FormMethod.Post, new { @class = "tableForm" }))
+        {
+            <div class="form-group mt-2">
+                @Html.LabelFor(model => model.NoOFChairs, new { @class = "form-label" })
+                @Html.TextBoxFor(model => model.NoOFChairs, new { @class = "form-control", type = "number", min = 0 })
+                @Html.ValidationMessageFor(model => model.NoOFChairs, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group mt-2">
+                @Html.LabelFor(model => model.CanBeReserved, new { @class = "form-label" })<br />
+
+                <div class="d-flex align-items-baseline">
+                    @Html.RadioButtonFor(model => model.CanBeReserved, "Yes")<p class="ms-2">Yes</p><br />
+                </div>
+
+
+                <div class="d-flex align-items-baseline">
+                    @Html.RadioButtonFor(model => model.CanBeReserved, "No")<p class="ms-2">No</p><br />
+                </div>
+
+
+                @Html.ValidationMessageFor(model => model.CanBeReserved, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group mt-2 d-flex justify-content-center flex-row">
+                <button class="btn btn-success" id="SaveTable" type="submit">Save Changes</button>
+            </div>
+        }
+    </div>
+</main>
+

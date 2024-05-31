@@ -1,0 +1,119 @@
+﻿
+@{
+    ViewBag.Title = "AllTableAdmin";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using Task10.Models
+@model List<DineInTable>
+
+<main>
+    <div class="container text-center mt-2">
+        <a href="/Home/CreateTablebyAdmin"><button class="btn btn-outline-primary " id="createTable">Add DineInTable</button></a>
+    </div>
+    <div class="mt-3 table-responsive">
+        <table class="table table-bordered table-striped" id="allDineInTable">
+            <thead>
+                <tr>
+                    <th>Table ID</th>
+                    <th>Total No. Of Chairs</th>
+                    <th>Can Be Reserved</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var i in Model)
+                {
+                    <tr>
+                        <td>@i.TableId</td>
+                        <td>@i.NoOFChairs</td>
+                        <td>@i.CanBeReserved</td>
+                        <td><a href="/Home/EditTable?id=@i.TableId" id="@i.TableId">Edit</a> | <a href="/Home/DeleteTable?id=@i.TableId" id="@i.TableId">Delete</a></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="modal fade"
+         id="modalId"
+         tabindex="-1"
+         data-bs-backdrop="static"
+         data-bs-keyboard="false"
+         role="dialog"
+         aria-labelledby="modalTitleId"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-sm"
+             role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTitleId">
+                        Add Table
+                    </h5>
+                    <button type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    ....
+                </div>
+                <div class="modal-footer">
+                    <button type="button"
+                            class="btn btn-secondary"
+                            data-bs-dismiss="modal">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</main>
+
+
+@section scripts{
+
+    <link href="~/Scripts/DataTables-2.0.3/css/dataTables.dataTables.min.css" rel="stylesheet" />
+    <link href="~/Scripts/DataTables-2.0.3/css/dataTables.dataTables.css" rel="stylesheet" />
+    <script src="~/Scripts/DataTables-2.0.3/js/dataTables.min.js"></script>
+
+    <script>
+
+        $("#allDineInTable").DataTable();
+
+        //$(document).ready(function (e) {
+        //    $(document).on("click", "#createTable", function (e) {
+        //        $.ajax({
+        //            method: 'GET',
+        //            url: '/Home/CreateTable',
+        //            success: function (res) {
+        //                $(".modal-body").html(res);
+        //                $("#modalId").modal("show");
+        //            },
+        //            error: function (error) {
+        //                alert("Something wen't wrong to get the data");
+        //            }
+        //        })
+        //    });
+
+
+        //    $(document).on("submit", ".tableForm", function (e) {
+        //        e.preventDefault();
+        //        $.validator.unobstrusive.Parse(this[0]);
+        //        debugger;
+        //        $.ajax({
+        //            method: 'P',
+        //            url: '/Home/CreateTableByAdmin',
+        //            success: function (res) {
+
+        //            },
+        //            error: function (error) {
+        //                alert("Something wen't wrong to get the data");
+        //            }
+        //        })
+        //    });
+        //});
+    </script>
+
+}

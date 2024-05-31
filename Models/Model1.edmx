@@ -31,6 +31,42 @@
           <Property Name="CreatedBy" Type="int" />
           <Property Name="Isdeleted" Type="int" />
         </EntityType>
+        <EntityType Name="CookingSession">
+          <Key>
+            <PropertyRef Name="SessionId" />
+          </Key>
+          <Property Name="SessionId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TranierId" Type="int" />
+          <Property Name="SessionDate" Type="datetime" />
+          <Property Name="CreatedOn" Type="datetime" />
+          <Property Name="UpdatedOn" Type="datetime" />
+          <Property Name="CreatedBy" Type="int" />
+          <Property Name="IsDeleted" Type="int" />
+        </EntityType>
+        <EntityType Name="CookingSessionAttendee">
+          <Key>
+            <PropertyRef Name="CookingSessionAttendeeId" />
+          </Key>
+          <Property Name="CookingSessionAttendeeId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SessionId" Type="int" />
+          <Property Name="AttendeeId" Type="int" />
+          <Property Name="CreatedOn" Type="datetime" />
+          <Property Name="UpdatedOn" Type="datetime" />
+          <Property Name="CreatedBy" Type="int" />
+          <Property Name="IsDeleted" Type="int" />
+        </EntityType>
+        <EntityType Name="DineInTables">
+          <Key>
+            <PropertyRef Name="TableId" />
+          </Key>
+          <Property Name="TableId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="NoOFChairs" Type="int" />
+          <Property Name="CanBeReserved" Type="bit" />
+          <Property Name="CreatedOn" Type="datetime" />
+          <Property Name="UpdatedOn" Type="datetime" />
+          <Property Name="CreatedBy" Type="int" />
+          <Property Name="IsDeleted" Type="int" />
+        </EntityType>
         <EntityType Name="Dish">
           <Key>
             <PropertyRef Name="DishId" />
@@ -182,6 +218,21 @@
           <Property Name="CreatedBy" Type="int" />
           <Property Name="Isdeleted" Type="int" />
         </EntityType>
+        <EntityType Name="ReservedTable">
+          <Key>
+            <PropertyRef Name="ReservedTableId" />
+          </Key>
+          <Property Name="ReservedTableId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TableId" Type="int" />
+          <Property Name="UserId" Type="int" />
+          <Property Name="NoOFPeople" Type="int" />
+          <Property Name="FromDateTime" Type="datetime" />
+          <Property Name="ToDateTime" Type="datetime" />
+          <Property Name="CreatedOn" Type="datetime" />
+          <Property Name="UpdatedOn" Type="datetime" />
+          <Property Name="CreatedBy" Type="int" />
+          <Property Name="IsDeleted" Type="int" />
+        </EntityType>
         <EntityType Name="Users">
           <Key>
             <PropertyRef Name="UserId" />
@@ -231,6 +282,42 @@
             </Principal>
             <Dependent Role="CartItemId">
               <PropertyRef Name="ItemID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__CookingSe__Atten__66603565">
+          <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
+          <End Role="CookingSessionAttendee" Type="Self.CookingSessionAttendee" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="CookingSessionAttendee">
+              <PropertyRef Name="AttendeeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__CookingSe__Sessi__656C112C">
+          <End Role="CookingSession" Type="Self.CookingSession" Multiplicity="0..1" />
+          <End Role="CookingSessionAttendee" Type="Self.CookingSessionAttendee" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CookingSession">
+              <PropertyRef Name="SessionId" />
+            </Principal>
+            <Dependent Role="CookingSessionAttendee">
+              <PropertyRef Name="SessionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__CookingSe__Trani__628FA481">
+          <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
+          <End Role="CookingSession" Type="Self.CookingSession" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="CookingSession">
+              <PropertyRef Name="TranierId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -390,6 +477,35 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK__ReservedT__Table__5EBF139D">
+          <End Role="DineInTables" Type="Self.DineInTables" Multiplicity="0..1" />
+          <End Role="ReservedTable" Type="Self.ReservedTable" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DineInTables">
+              <PropertyRef Name="TableId" />
+            </Principal>
+            <Dependent Role="ReservedTable">
+              <PropertyRef Name="TableId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ReservedT__UserI__5FB337D6">
+          <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
+          <End Role="ReservedTable" Type="Self.ReservedTable" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="ReservedTable">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="new_get_notReserved_Table_forBooking" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="fromDate" Type="datetime" Mode="In" />
+          <Parameter Name="toDate" Type="datetime" Mode="In" />
+          <Parameter Name="noofPeoples" Type="int" Mode="In" />
+        </Function>
         <Function Name="sp_orderDetails" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="id" Type="int" Mode="In" />
         </Function>
@@ -400,6 +516,9 @@
         <EntityContainer Name="ExamModelStoreContainer">
           <EntitySet Name="Cart" EntityType="Self.Cart" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CartItemId" EntityType="Self.CartItemId" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CookingSession" EntityType="Self.CookingSession" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CookingSessionAttendee" EntityType="Self.CookingSessionAttendee" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DineInTables" EntityType="Self.DineInTables" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Dish" EntityType="Self.Dish" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DishItem" EntityType="Self.DishItem" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Event" EntityType="Self.Event" Schema="dbo" store:Type="Tables" />
@@ -410,6 +529,7 @@
           <EntitySet Name="Orders" EntityType="Self.Orders" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Overtime" EntityType="Self.Overtime" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Products" EntityType="Self.Products" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ReservedTable" EntityType="Self.ReservedTable" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK__Cart__UserId__36B12243" Association="Self.FK__Cart__UserId__36B12243">
             <End Role="Users" EntitySet="Users" />
@@ -422,6 +542,18 @@
           <AssociationSet Name="FK__CartItemI__ItemI__3A81B327" Association="Self.FK__CartItemI__ItemI__3A81B327">
             <End Role="Products" EntitySet="Products" />
             <End Role="CartItemId" EntitySet="CartItemId" />
+          </AssociationSet>
+          <AssociationSet Name="FK__CookingSe__Atten__66603565" Association="Self.FK__CookingSe__Atten__66603565">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="CookingSessionAttendee" EntitySet="CookingSessionAttendee" />
+          </AssociationSet>
+          <AssociationSet Name="FK__CookingSe__Sessi__656C112C" Association="Self.FK__CookingSe__Sessi__656C112C">
+            <End Role="CookingSession" EntitySet="CookingSession" />
+            <End Role="CookingSessionAttendee" EntitySet="CookingSessionAttendee" />
+          </AssociationSet>
+          <AssociationSet Name="FK__CookingSe__Trani__628FA481" Association="Self.FK__CookingSe__Trani__628FA481">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="CookingSession" EntitySet="CookingSession" />
           </AssociationSet>
           <AssociationSet Name="FK__Dish__ItemID__300424B4" Association="Self.FK__Dish__ItemID__300424B4">
             <End Role="Products" EntitySet="Products" />
@@ -474,6 +606,14 @@
           <AssociationSet Name="FK__Overtime__UserId__4D94879B" Association="Self.FK__Overtime__UserId__4D94879B">
             <End Role="Users" EntitySet="Users" />
             <End Role="Overtime" EntitySet="Overtime" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ReservedT__Table__5EBF139D" Association="Self.FK__ReservedT__Table__5EBF139D">
+            <End Role="DineInTables" EntitySet="DineInTables" />
+            <End Role="ReservedTable" EntitySet="ReservedTable" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ReservedT__UserI__5FB337D6" Association="Self.FK__ReservedT__UserI__5FB337D6">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="ReservedTable" EntitySet="ReservedTable" />
           </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -591,6 +731,9 @@
           <NavigationProperty Name="Events" Relationship="ExamModel.FK__Event__UserId__2739D489" FromRole="User" ToRole="Event" />
           <NavigationProperty Name="Overtimes" Relationship="ExamModel.FK__Overtime__UserId__4D94879B" FromRole="User" ToRole="Overtime" />
           <NavigationProperty Name="Leaves" Relationship="ExamModel.FK__Leave__UserId__4AB81AF0" FromRole="User" ToRole="Leave" />
+          <NavigationProperty Name="CookingSessions" Relationship="ExamModel.FK__CookingSe__Trani__628FA481" FromRole="User" ToRole="CookingSession" />
+          <NavigationProperty Name="CookingSessionAttendees" Relationship="ExamModel.FK__CookingSe__Atten__66603565" FromRole="User" ToRole="CookingSessionAttendee" />
+          <NavigationProperty Name="ReservedTables" Relationship="ExamModel.FK__ReservedT__UserI__5FB337D6" FromRole="User" ToRole="ReservedTable" />
         </EntityType>
         <Association Name="FK__Dish__ItemID__300424B4">
           <End Role="Products" Type="Self.Product" Multiplicity="0..1" />
@@ -749,6 +892,35 @@
             <End Role="User" EntitySet="Users" />
             <End Role="Leave" EntitySet="Leaves" />
           </AssociationSet>
+          <EntitySet Name="CookingSessions" EntityType="ExamModel.CookingSession" />
+          <EntitySet Name="CookingSessionAttendees" EntityType="ExamModel.CookingSessionAttendee" />
+          <AssociationSet Name="FK__CookingSe__Sessi__656C112C" Association="ExamModel.FK__CookingSe__Sessi__656C112C">
+            <End Role="CookingSession" EntitySet="CookingSessions" />
+            <End Role="CookingSessionAttendee" EntitySet="CookingSessionAttendees" />
+          </AssociationSet>
+          <AssociationSet Name="FK__CookingSe__Trani__628FA481" Association="ExamModel.FK__CookingSe__Trani__628FA481">
+            <End Role="User" EntitySet="Users" />
+            <End Role="CookingSession" EntitySet="CookingSessions" />
+          </AssociationSet>
+          <AssociationSet Name="FK__CookingSe__Atten__66603565" Association="ExamModel.FK__CookingSe__Atten__66603565">
+            <End Role="User" EntitySet="Users" />
+            <End Role="CookingSessionAttendee" EntitySet="CookingSessionAttendees" />
+          </AssociationSet>
+          <EntitySet Name="DineInTables" EntityType="ExamModel.DineInTable" />
+          <EntitySet Name="ReservedTables" EntityType="ExamModel.ReservedTable" />
+          <AssociationSet Name="FK__ReservedT__Table__5EBF139D" Association="ExamModel.FK__ReservedT__Table__5EBF139D">
+            <End Role="DineInTable" EntitySet="DineInTables" />
+            <End Role="ReservedTable" EntitySet="ReservedTables" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ReservedT__UserI__5FB337D6" Association="ExamModel.FK__ReservedT__UserI__5FB337D6">
+            <End Role="User" EntitySet="Users" />
+            <End Role="ReservedTable" EntitySet="ReservedTables" />
+          </AssociationSet>
+          <FunctionImport Name="new_get_notReserved_Table_forBooking" ReturnType="Collection(ExamModel.new_get_notReserved_Table_forBooking_Result)">
+            <Parameter Name="fromDate" Mode="In" Type="DateTime" />
+            <Parameter Name="toDate" Mode="In" Type="DateTime" />
+            <Parameter Name="noofPeoples" Mode="In" Type="Int32" />
+          </FunctionImport>
         </EntityContainer>
         <EntityType Name="Cart">
           <Key>
@@ -1006,6 +1178,135 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="CookingSession">
+          <Key>
+            <PropertyRef Name="SessionId" />
+          </Key>
+          <Property Name="SessionId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TranierId" Type="Int32" />
+          <Property Name="SessionDate" Type="DateTime" Precision="3" />
+          <Property Name="CreatedOn" Type="DateTime" Precision="3" />
+          <Property Name="UpdatedOn" Type="DateTime" Precision="3" />
+          <Property Name="CreatedBy" Type="Int32" />
+          <Property Name="IsDeleted" Type="Int32" />
+          <NavigationProperty Name="CookingSessionAttendees" Relationship="ExamModel.FK__CookingSe__Sessi__656C112C" FromRole="CookingSession" ToRole="CookingSessionAttendee" />
+          <NavigationProperty Name="User" Relationship="ExamModel.FK__CookingSe__Trani__628FA481" FromRole="CookingSession" ToRole="User" />
+        </EntityType>
+        <EntityType Name="CookingSessionAttendee">
+          <Key>
+            <PropertyRef Name="CookingSessionAttendeeId" />
+          </Key>
+          <Property Name="CookingSessionAttendeeId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SessionId" Type="Int32" />
+          <Property Name="AttendeeId" Type="Int32" />
+          <Property Name="CreatedOn" Type="DateTime" Precision="3" />
+          <Property Name="UpdatedOn" Type="DateTime" Precision="3" />
+          <Property Name="CreatedBy" Type="Int32" />
+          <Property Name="IsDeleted" Type="Int32" />
+          <NavigationProperty Name="CookingSession" Relationship="ExamModel.FK__CookingSe__Sessi__656C112C" FromRole="CookingSessionAttendee" ToRole="CookingSession" />
+          <NavigationProperty Name="User" Relationship="ExamModel.FK__CookingSe__Atten__66603565" FromRole="CookingSessionAttendee" ToRole="User" />
+        </EntityType>
+        <Association Name="FK__CookingSe__Sessi__656C112C">
+          <End Type="ExamModel.CookingSession" Role="CookingSession" Multiplicity="0..1" />
+          <End Type="ExamModel.CookingSessionAttendee" Role="CookingSessionAttendee" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CookingSession">
+              <PropertyRef Name="SessionId" />
+            </Principal>
+            <Dependent Role="CookingSessionAttendee">
+              <PropertyRef Name="SessionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__CookingSe__Trani__628FA481">
+          <End Type="ExamModel.User" Role="User" Multiplicity="0..1" />
+          <End Type="ExamModel.CookingSession" Role="CookingSession" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="CookingSession">
+              <PropertyRef Name="TranierId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__CookingSe__Atten__66603565">
+          <End Type="ExamModel.User" Role="User" Multiplicity="0..1" />
+          <End Type="ExamModel.CookingSessionAttendee" Role="CookingSessionAttendee" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="CookingSessionAttendee">
+              <PropertyRef Name="AttendeeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="DineInTable">
+          <Key>
+            <PropertyRef Name="TableId" />
+          </Key>
+          <Property Name="TableId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="NoOFChairs" Type="Int32" />
+          <Property Name="CanBeReserved" Type="Boolean" />
+          <Property Name="CreatedOn" Type="DateTime" Precision="3" />
+          <Property Name="UpdatedOn" Type="DateTime" Precision="3" />
+          <Property Name="CreatedBy" Type="Int32" />
+          <Property Name="IsDeleted" Type="Int32" />
+          <NavigationProperty Name="ReservedTables" Relationship="ExamModel.FK__ReservedT__Table__5EBF139D" FromRole="DineInTable" ToRole="ReservedTable" />
+        </EntityType>
+        <EntityType Name="ReservedTable">
+          <Key>
+            <PropertyRef Name="ReservedTableId" />
+          </Key>
+          <Property Name="ReservedTableId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TableId" Type="Int32" />
+          <Property Name="UserId" Type="Int32" />
+          <Property Name="NoOFPeople" Type="Int32" />
+          <Property Name="FromDateTime" Type="DateTime" Precision="3" />
+          <Property Name="ToDateTime" Type="DateTime" Precision="3" />
+          <Property Name="CreatedOn" Type="DateTime" Precision="3" />
+          <Property Name="UpdatedOn" Type="DateTime" Precision="3" />
+          <Property Name="CreatedBy" Type="Int32" />
+          <Property Name="IsDeleted" Type="Int32" />
+          <NavigationProperty Name="DineInTable" Relationship="ExamModel.FK__ReservedT__Table__5EBF139D" FromRole="ReservedTable" ToRole="DineInTable" />
+          <NavigationProperty Name="User" Relationship="ExamModel.FK__ReservedT__UserI__5FB337D6" FromRole="ReservedTable" ToRole="User" />
+        </EntityType>
+        <Association Name="FK__ReservedT__Table__5EBF139D">
+          <End Type="ExamModel.DineInTable" Role="DineInTable" Multiplicity="0..1" />
+          <End Type="ExamModel.ReservedTable" Role="ReservedTable" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DineInTable">
+              <PropertyRef Name="TableId" />
+            </Principal>
+            <Dependent Role="ReservedTable">
+              <PropertyRef Name="TableId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ReservedT__UserI__5FB337D6">
+          <End Type="ExamModel.User" Role="User" Multiplicity="0..1" />
+          <End Type="ExamModel.ReservedTable" Role="ReservedTable" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="ReservedTable">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <ComplexType Name="new_get_notReserved_Table_forBooking_Result">
+          <Property Type="Int32" Name="TableId" Nullable="false" />
+          <Property Type="Int32" Name="NoOFChairs" Nullable="true" />
+          <Property Type="Boolean" Name="CanBeReserved" Nullable="true" />
+          <Property Type="Int32" Name="ReservedTableId" Nullable="true" />
+          <Property Type="Int32" Name="ReservedTable_id" Nullable="true" />
+          <Property Type="Int32" Name="UserId" Nullable="true" />
+          <Property Type="Int32" Name="NoOFPeople" Nullable="true" />
+          <Property Type="DateTime" Name="FromDateTime" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="ToDateTime" Nullable="true" Precision="23" />
+        </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1249,6 +1550,76 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="CookingSessions">
+            <EntityTypeMapping TypeName="ExamModel.CookingSession">
+              <MappingFragment StoreEntitySet="CookingSession">
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="UpdatedOn" ColumnName="UpdatedOn" />
+                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+                <ScalarProperty Name="SessionDate" ColumnName="SessionDate" />
+                <ScalarProperty Name="TranierId" ColumnName="TranierId" />
+                <ScalarProperty Name="SessionId" ColumnName="SessionId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CookingSessionAttendees">
+            <EntityTypeMapping TypeName="ExamModel.CookingSessionAttendee">
+              <MappingFragment StoreEntitySet="CookingSessionAttendee">
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="UpdatedOn" ColumnName="UpdatedOn" />
+                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+                <ScalarProperty Name="AttendeeId" ColumnName="AttendeeId" />
+                <ScalarProperty Name="SessionId" ColumnName="SessionId" />
+                <ScalarProperty Name="CookingSessionAttendeeId" ColumnName="CookingSessionAttendeeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DineInTables">
+            <EntityTypeMapping TypeName="ExamModel.DineInTable">
+              <MappingFragment StoreEntitySet="DineInTables">
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="UpdatedOn" ColumnName="UpdatedOn" />
+                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+                <ScalarProperty Name="CanBeReserved" ColumnName="CanBeReserved" />
+                <ScalarProperty Name="NoOFChairs" ColumnName="NoOFChairs" />
+                <ScalarProperty Name="TableId" ColumnName="TableId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ReservedTables">
+            <EntityTypeMapping TypeName="ExamModel.ReservedTable">
+              <MappingFragment StoreEntitySet="ReservedTable">
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="UpdatedOn" ColumnName="UpdatedOn" />
+                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+                <ScalarProperty Name="ToDateTime" ColumnName="ToDateTime" />
+                <ScalarProperty Name="FromDateTime" ColumnName="FromDateTime" />
+                <ScalarProperty Name="NoOFPeople" ColumnName="NoOFPeople" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="TableId" ColumnName="TableId" />
+                <ScalarProperty Name="ReservedTableId" ColumnName="ReservedTableId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="new_get_notReserved_Table_forBooking" FunctionName="ExamModel.Store.new_get_notReserved_Table_forBooking">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="ExamModel.new_get_notReserved_Table_forBooking_Result">
+                <ScalarProperty Name="TableId" ColumnName="TableId" />
+                <ScalarProperty Name="NoOFChairs" ColumnName="NoOFChairs" />
+                <ScalarProperty Name="CanBeReserved" ColumnName="CanBeReserved" />
+                <ScalarProperty Name="ReservedTableId" ColumnName="ReservedTableId" />
+                <ScalarProperty Name="ReservedTable_id" ColumnName="ReservedTable_id" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="NoOFPeople" ColumnName="NoOFPeople" />
+                <ScalarProperty Name="FromDateTime" ColumnName="FromDateTime" />
+                <ScalarProperty Name="ToDateTime" ColumnName="ToDateTime" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

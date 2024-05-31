@@ -1,0 +1,339 @@
+﻿
+
+<h2>CookingSession</h2>
+
+<button type="button" id="add" data-id="0" class="btn btn-outline-success edit">Add Cooking Session</button>
+
+<div class="modal" tabindex="-1" id="myModal" data-bs-backdrop="static">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Add Cooking Session</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<table class="table" id="myTable">
+    <thead>
+        <tr>
+            <th></th>
+            <th>Trainer Name</th>
+            <th>Session Date</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+@section Scripts{
+    <script>
+        let sessionid;
+        let table;
+        $(document).on("click", "#add", function (e) {
+            debugger
+            let id = $(this).data('id');
+            $('.modal-body').html('');
+            $.ajax({
+                method: "GET",
+                url: "/Admin/GetForm/" + id,
+                contentType: false,
+                success: function (response) {
+
+                    $('.modal-body').append(response);
+                    $('#myModal').modal('show');
+                    $.validator.unobtrusive.parse($("#formData"));
+                    $(document).on('change', '#TranierId', function () {
+                        debugger;
+                        let id = $(this).val();
+                        console.log(id)
+                        $.ajax({
+                            method: 'GET',
+                            url: "/Admin/GetAttendeeList/" + id,
+                            success: function (response) {
+                                console.log(response.data);
+                                $("#AttendeeId").empty();
+                                let data = response.data;
+
+                                for (let i = 0; i <= data.length; i++) {
+                                    console.log(data[i]);
+                                    let option = `<option value=${data[i].Value}>${data[i].Text}</option>`;
+                                    $('#AttendeeId').append(option);
+                                }
+                            }
+                        })
+                    })
+
+                }
+
+            })
+        })
+
+        $(document).on("click", "#edit", function (e) {
+            debugger
+            sessionid = $(this).data('id');
+            $('.modal-body').html('');
+            $.ajax({
+                method: "GET",
+                url: "/Admin/GetForm/" + sessionid,
+                contentType: false,
+                success: function (response) {
+
+                    $('.modal-body').append(response);
+                    $('#myModal').modal('show');
+                    $.validator.unobtrusive.parse($("#formData"));
+                    $(document).on('change', '#TranierId', function () {
+                        debugger;
+                        let id = $(this).val();
+                        console.log(id)
+                        $.ajax({
+                            method: 'GET',
+                            url: "/Admin/GetAttendeeList/" + id,
+                            success: function (response) {
+                                console.log(response.data);
+                                $("#AttendeeId").empty();
+                                let data = response.data;
+
+                                for (let i = 0; i <= data.length; i++) {
+                                    console.log(data[i]);
+                                    let option = `<option value=${data[i].Value}>${data[i].Text}</option>`;
+                                    $('#AttendeeId').append(option);
+                                }
+                            }
+                        })
+                    })
+
+                }
+
+            })
+        })
+        $(document).on('submit', '#formData',function (e) {
+            e.preventDefault();
+            debugger
+            var formData = $(this).serialize();
+            console.log(formData)
+            if (sessionid == undefined) {
+                sessionid = 0;
+            }
+            if (sessionid == 0) {
+                $.ajax({
+                    method: "POST",
+                    url: "/Admin/submitCookingData",
+                    processData: false,
+                    data: formData,
+                    success: function (response) {
+                        if (response.success) {
+                            let table = $('#myTable').DataTable();
+                            table.draw(false); // Redraw the DataTable without resetting the pagination
+                            $('#myModal').modal('hide'); // Close the modal
+                            window.location.href = "/Admin/CookingSession";
+                        }
+                        else if (response.success === false && response.redirectUrl) {
+                            window.location.href = response.redirectUrl;
+                        }
+                        else {
+                            // If there are validation errors, replace the form with the updated one
+                            $('.modal-body').html(response);
+                            $.validator.unobtrusive.parse($("#formData"));
+                        }
+                    },
+                    error: function () {
+                        debugger;
+                        window.location.href = "/Auth/Login";
+                    }
+                })
+            }
+            else {
+                $.ajax({
+                    method: "POST",
+                    url: "/Admin/EditCookingData",
+                    processData: false,
+                    data: formData,
+                    success: function (response) {
+                        if (response.success) {
+                            let table = $('#myTable').DataTable();
+                            table.draw(false); // Redraw the DataTable without resetting the pagination
+                            $('#myModal').modal('hide'); // Close the modal
+                            sessionid = 0;
+                            window.location.href = "/Admin/CookingSession";
+                        }
+                        else if (response.success === false && response.redirectUrl) {
+                            window.location.href = response.redirectUrl;
+                        } else {
+                            // If there are validation errors, replace the form with the updated one
+                            $('.modal-body').html(response);
+                            $.validator.unobtrusive.parse($("#formData"));
+                        }
+                    }
+                })
+
+            }
+        })
+        $(document).on("click", ".delete", function (e) {
+            debugger
+
+            let id = $(this).data('id');
+            $('.modal-body').html('');
+            $.ajax({
+                method: 'GET',
+                url: "/Admin/delete/" + id,
+                success: function (response) {
+                    let table = $('#myTable').DataTable();
+                    table.draw();
+                    window.location.href = "/Admin/CookingSession"
+                }
+
+
+            })
+        })
+
+        $.ajax({
+            method: 'GET',
+            url: "/Admin/GetCookingData",
+            success: function (response) {
+                console.log(response)
+                response.data.forEach((Data) => {
+                    $()
+                } )
+
+            }
+        })
+
+
+            $('#myTable').DataTable({
+                "ajax": {
+                    "url": "/Admin/GetCookingData",
+                    "type": "GET",
+                    "dataType": "JSON"
+                },
+                "columns": [
+                    {
+                        className: 'dt-control',
+                        orderable: false,
+                        data: null,
+                        defaultContent: ''
+                    },
+                    { "data": "Name", "autoWidth": true, "searchable": true },
+                    {
+                        "data": "date", "autoWidth": true, "searchable": true, render: function (data, row) {
+                            let parts = data.split(' ');
+
+                            for (let i = 0; i < parts.length; i++){
+                                if (parts[i] == "") {
+                                    parts.splice(i, 1);
+                                }
+                            }
+                            // Extract the month, day, and year
+                            let month = parts[0]; // May
+                            let day = parts[1]; // 26
+                            let year = parts[2]; // 2024
+                            // Return the reconstructed date string
+                            let formattedDate = month + " " + day + " " + year;
+                            return formattedDate;
+                        },
+                    },
+                        {
+
+                        "data": null,
+                        "autoWidth": true,
+                        "searchable": false,
+                        "render": function (data, type, row) {
+                            return `
+                                 <button type="button" id="edit" data-id="${row.SessionId}" class="btn btn-outline-success edit">Edit</button>
+                                 <button type="button" data-id="${row.SessionId}" class="btn btn-outline-danger delete">Delete</button>
+                             `;
+                        }
+                    }
+
+                ]
+            });
+
+        $(document).on('click', '.dt-control', function () {
+
+            let table = $('#myTable').DataTable();
+            let tr = $(this).closest('tr');
+            let id = tr.find(".edit").data('id');
+
+            let index = table.row(tr).index();
+            let myRow = table.row(index)
+
+            let aTR = `
+            <table class="table background-nested" id="eduTable">
+                <thead>
+                    <tr>
+                        <th class="text-center">Attendee Name</th>
+                        <th class="text-center">Created On</th>
+                        <th class="text-center">Updated On</th>
+                    </tr>
+                 </thead>
+                <tbody id="eduBody${index}">
+
+                </tbody>
+             </table>
+            `;
+            if (myRow.child.isShown()) {
+                myRow.child.hide()
+            } else {
+                // THIS LOOP CLOSE ALL NESTED TABLE WHICH IS OPEN
+                table.rows().every(function () {
+                    this.child.remove();
+                })
+                myRow.child(aTR).show();
+                $("#eduTable").DataTable({
+                    "processing": true,
+
+                    "ajax":
+                    {
+                        "url": "/Admin/GetChildData/" + id,
+                        "type": "GET",
+                        "dataType": "JSON"
+                    },
+                    "columns": [
+                        { "data": "name"},
+                        { "data": "create"},
+                        { "data": "update" },
+
+                    ]
+                });
+            }
+        })
+        //$(document).on('click', '#edit', function () {
+        //    var id = $(this).data('id');
+        //    $('.modal-body').html('');
+
+        //    $.ajax({
+        //        method: "get",
+        //        url: "/Admin/getdata/" + id,
+        //        contenttype: false,
+        //        success: function (response) {
+
+        //            $('.modal-body').append(response);
+        //            $('#mymodal').modal('show');
+        //            $.validator.unobtrusive.parse($("#formdata"));
+        //            //$('#formdata').on('submit', function (e) {
+        //            //    e.preventdefault();
+        //            //    var formdata = $(this).serialize();
+        //            //    $.ajax({
+        //            //        method: "post",
+        //            //        url: "/Admin/submittask",
+        //            //        processdata: false,
+        //            //        data: formdata,
+        //            //        success: function () {
+        //            //            let table = $('#mytable').datatable();
+        //            //            table.draw(false);
+        //            //            $('.btn-close').trigger("click");
+        //            //        }
+        //            //    })
+        //            //})
+
+        //        }
+
+        //    })
+        //})
+    </script>
+}

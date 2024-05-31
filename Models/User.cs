@@ -22,6 +22,9 @@ namespace Task10.Models
             this.Events = new HashSet<Event>();
             this.Overtimes = new HashSet<Overtime>();
             this.Leaves = new HashSet<Leave>();
+            this.CookingSessions = new HashSet<CookingSession>();
+            this.CookingSessionAttendees = new HashSet<CookingSessionAttendee>();
+            this.ReservedTables = new HashSet<ReservedTable>();
         }
     
         public int UserId { get; set; }
@@ -46,5 +49,11 @@ namespace Task10.Models
         public virtual ICollection<Overtime> Overtimes { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Leave> Leaves { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<CookingSession> CookingSessions { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<CookingSessionAttendee> CookingSessionAttendees { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ReservedTable> ReservedTables { get; set; }
     }
 }

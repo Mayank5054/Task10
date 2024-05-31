@@ -140,8 +140,11 @@
     <Compile Include="Controllers\MailController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Controllers\StockController.cs" />
+    <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="ExtendedModels\CookingSession.cs" />
     <Compile Include="ExtendedModels\Dish.cs" />
     <Compile Include="ExtendedModels\DishItemClass.cs" />
+    <Compile Include="ExtendedModels\EditUser.cs" />
     <Compile Include="ExtendedModels\Event.cs" />
     <Compile Include="ExtendedModels\LoginModel.cs" />
     <Compile Include="ExtendedModels\Product.cs" />
@@ -155,6 +158,15 @@
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\CartItemId.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\CookingSession.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\CookingSessionAttendee.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DineInTable.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Dish.cs">
@@ -189,6 +201,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Model1.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Models\new_get_notReserved_Table_forBooking_Result.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Order.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
@@ -202,6 +217,9 @@
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Product.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ReservedTable.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\sp_orderDetails_Result.cs">
@@ -225,7 +243,16 @@
     <Content Include="Views\Dish\AddDish.cshtml" />
     <Content Include="Views\Dish\AllDishes.cshtml" />
     <Content Include="Views\Dish\UpdateDish.cshtml" />
+    <Content Include="Views\Admin\CookingSession.cshtml" />
     <None Include="Views\EventItems\Index.cshtml" />
+    <Content Include="Views\Shared\_CookingSession.cshtml" />
+    <Content Include="Views\User\AvailableTable.cshtml" />
+    <Content Include="Views\User\BookTable.cshtml" />
+    <Content Include="Views\User\Index.cshtml" />
+    <Content Include="Views\User\MyBookTable.cshtml" />
+    <Content Include="Views\Home\AllTableAdmin.cshtml" />
+    <Content Include="Views\Home\CreateTablebyAdmin.cshtml" />
+    <Content Include="Views\Home\EditTable.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-grid.css" />

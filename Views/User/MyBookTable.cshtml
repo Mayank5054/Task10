@@ -1,0 +1,47 @@
+﻿
+@{
+    ViewBag.Title = "MyBookTable";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using Task10.Models
+@model List<ReservedTable>
+
+<div class="mt-3 table-responsive">
+    <table class="table table-bordered table-striped"  id="TableOfReservedTable">
+        <thead>
+            <tr>
+                <th>Table Reserved ID</th>
+                <th>Table ID</th>
+                <th>No of peoples</th>
+                <th>From Date Time</th>
+                <th>To Date Time</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var i in Model)
+            {
+                <tr>
+                    <td>@i.ReservedTableId</td>
+                    <td>@i.TableId</td>
+                    <td>@i.NoOFPeople</td>
+                    <td>@i.FromDateTime</td>
+                    <td>@i.ToDateTime</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+@section scripts{
+    <link href="~/Scripts/DataTables-2.0.3/css/dataTables.dataTables.css" rel="stylesheet" />
+    <link href="~/Scripts/DataTables-2.0.3/css/dataTables.bootstrap.min.css" rel="stylesheet" />
+        <script src="~/Scripts/DataTables-2.0.3/js/dataTables.min.js"></script>
+    <script>
+
+        $("#TableOfReservedTable").DataTable();
+
+    </script>
+}
+

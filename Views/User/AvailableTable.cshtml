@@ -1,0 +1,41 @@
+﻿
+@{
+    ViewBag.Title = "AvailableTable";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using Task10.Models
+@model List<ReservedTable>
+
+<main>
+    <div class="mt-3 table-responsive">
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Table ID</th>
+                    <th>Reserved ID</th>
+                    <th>User ID</th>
+                    <th>Number of people</th>
+                    <th>DateTime From</th>
+                    <th>DateTime To</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var i in Model)
+                {
+                    var data = HtmlHelper.AnonymousObjectToHtmlAttributes(i);
+                    <tr>
+                        <td>@data["TableId"]</td>
+                        <td>@data["id"]</td>
+                        <td>@data["userID"]</td>
+                        <td>@data["total"]</td>
+                        <td>@data["from"]</td>
+                        <td>@data["to"]</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</main>
+
+

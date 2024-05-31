@@ -1,17 +1,4 @@
 ﻿
-@{
-    ViewBag.Title = "Index";
-}
-
-@{
-    ViewBag.Title = "Index";
-}
-
-
-@{
-    ViewBag.Title = "Index";
-}
-
 <main class="shadow-lg bg-white p-2 m-2">
     <a href="/Admin/AddUser" class="btn btn-primary">Add a Cook or Cashier</a>
     <a href="/Leave/GetAbsenties" class="btn btn-primary">Approve Or Reject Leave</a>
@@ -48,6 +35,90 @@
             </div>*@
     </div>
 </main>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+<h1>Employee On Leave Today</h1>
+
+<table class="table" id="myTable">
+    <thead>
+        <tr>
+            <th>id</th>
+            <th>User Name</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+<h1>Employee On OverTime Today</h1>
+
+<table class="table" id="overTimeTable">
+    <thead>
+        <tr>
+            <th>id</th>
+            <th>User Name</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+<h1>Total Today Revenue</h1>
+<p id="revenue-amount" class="fs-3"></p>
+
+
+    <script>
+        $(document).ready(function () {
+            $('#myTable').DataTable({
+                "ajax": {
+                    "url": "/Admin/GetLeaveData",
+                    "type": "GET",
+                    "dataType": "JSON"
+                },
+                "columns": [
+                    {
+                        data: null,
+                        render: function (data, type, row, meta) {
+                            return meta.row + 1;
+                        }
+                    },
+                    { "data": "Name", "autoWidth": true, "searchable": true }
+
+                ]
+            });
+
+            $('#overTimeTable').DataTable({
+                "ajax": {
+                    "url": "/Admin/GetOvertimeData",
+                    "type": "GET",
+                    "dataType": "JSON"
+                },
+                "columns": [
+                    {
+                        data: null,
+                        render: function (data, type, row, meta) {
+                            return meta.row + 1;
+                        }
+                    },
+                    { "data": "Name", "autoWidth": true, "searchable": true }
+
+                ]
+            });
+            $.ajax({
+                    url: '@Url.Action("GetRevenueData", "Admin")',
+                    method: 'GET',
+                    success: function(response) {
+                        $('#revenue-amount').html(`Total Revenue: <i class="fas fa-rupee-sign"></i>` + response.data.toFixed(2));
+                    },
+                    error: function(error) {
+                        console.log("Error fetching revenue data: ", error);
+                    }
+                });
+
+        });
+
+
+
+    </script>
+
 
 @section scripts{
     <script>
@@ -59,8 +130,8 @@
             success: function (data) {
                 table = $("#order").DataTable({
 
-                       data : data,
-                   filter: true,
+                    data: data,
+                    filter: true,
 
                     columns: [
                         {

@@ -10,6 +10,7 @@ using Task10.Filters;
 using Task10.Models;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using System.Data.Entity.Migrations;
 namespace Task10.Controllers
 {
     [LoginFilter]
@@ -21,11 +22,11 @@ namespace Task10.Controllers
             _db = new ExamEntities();
         }
 
-        [AuthorizationFilter(new string[] { "cashier" })]
-        public ActionResult Index()
-        {
-            return View();
-        }
+        //[AuthorizationFilter(new string[] { "cashier" })]
+        //public ActionResult Index()
+        //{
+        //    return View();
+        //}
 
         public ActionResult About()
         {
@@ -253,6 +254,92 @@ namespace Task10.Controllers
             _do.ProductName = products;
             string data = JsonConvert.SerializeObject(_do);
             return Json(new { status = "success",data =data}, JsonRequestBehavior.AllowGet);
+        }
+
+
+
+
+
+        ////////////////////////////////////////////////   Chintan Task (Task 12) //////////////////////
+        public ActionResult Index()
+        {
+            var data = _db.DineInTables.Where(x => x.CanBeReserved == true).ToList();
+
+            return View(data);
+        }
+
+        public ActionResult CreateTablebyAdmin()
+        {
+            return View();
+        }
+
+        public ActionResult EditTable(int? id)
+        {
+            var data = _db.DineInTables.Where(x => x.TableId == id).FirstOrDefault();
+            return View(data);
+        }
+
+
+        public ActionResult DeleteTable(int? id)
+        {
+            var res_data = _db.ReservedTables.Where(x => x.TableId == id).ToList();
+
+            foreach (var i in res_data)
+            {
+                var d = _db.ReservedTables.Where(x => x.TableId == @i.TableId).FirstOrDefault();
+                _db.ReservedTables.Remove(d);
+                _db.SaveChanges();
+            }
+
+
+            var data = _db.DineInTables.Find(id);
+            _db.DineInTables.Remove(data);
+            _db.SaveChanges();
+            return RedirectToAction("AllTableAdmin", "Home");
+        }
+
+        public ActionResult UpdateTable(DineInTable data, string CanBeReserved)
+        {
+            if (CanBeReserved == "Yes")
+            {
+                data.CanBeReserved = true;
+            }
+            else
+            {
+                data.CanBeReserved = false;
+            }
+
+            _db.DineInTables.AddOrUpdate(data);
+            _db.SaveChanges();
+            return RedirectToAction("AllTableAdmin", "Home");
+        }
+
+        [HttpPost]
+        public ActionResult SaveTablebyAdmin(DineInTable data, string CanBeReserved)
+        {
+            if (CanBeReserved == "Yes")
+            {
+                data.CanBeReserved = true;
+            }
+            else
+            {
+                data.CanBeReserved = false;
+            }
+
+            _db.DineInTables.Add(data);
+            _db.SaveChanges();
+
+            return RedirectToAction("AllTableAdmin", "Home");
+        }
+        //public ActionResult CreateTableByAdmin(DineInTable dta)
+        //{
+        //    return View();
+        //} 
+
+        public ActionResult AllTableAdmin()
+        {
+            List<DineInTable> data = _db.DineInTables.ToList();
+            return View(data);
         }
     }
 }

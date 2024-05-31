@@ -1,0 +1,336 @@
+﻿
+@{
+    ViewBag.Title = "BookTable";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@using Task10.Models
+@model ReservedTable
+
+<main>
+    <div class="conatainer">
+        @{
+
+        }
+        @using (Html.BeginForm("BookNewTable", "User", FormMethod.Post, new { @id = "BookTableForm" }))
+        {
+
+
+            @*var currentDate = DateTime.Now;
+                var minDate = new DateTime(currentDate.Year, currentDate.Month, currentDate.Day, currentDate.Hour, currentDate.Minute, 0);
+
+                var minDateTimeString = minDate.ToString("yyyy-MM-ddTHH:MM");
+
+                <div class="form-group mt-2">
+                    @Html.LabelFor(model => model.FromDateTime, new { @class = "form-label" })
+                    <input type="datetime-local" id="fromdatetime" name="FromDateTime" class="form-control">
+                    @Html.ValidationMessageFor(model => model.FromDateTime, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group mt-2">
+                    @Html.LabelFor(model => model.ToDateTime, new { @class = "form-label" })
+                    <input type="datetime-local" id="Todatetime" name="ToDateTime" class="form-control">
+                    @Html.ValidationMessageFor(model => model.ToDateTime, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group mt-2">
+                    @Html.LabelFor(model => model.NoOFPeople, new { @class = "form-label" })
+                    @Html.TextBoxFor(model => model.NoOFPeople, new { @class = "form-control", @id = "total", type = "number" })
+                    @Html.ValidationMessageFor(model => model.NoOFPeople, "", new { @class = "text-danger" })
+                </div>*@
+
+            var currentDate = DateTime.Now;
+            var minDate = new DateTime(currentDate.Year, currentDate.Month, currentDate.Day);
+
+            var minDateTimeString = minDate.ToString("yyyy-MM-dd");
+            <div class="form-group mt-2">
+                <p>Select the date</p>
+                @Html.TextBoxFor(model => model.FromDateTime, new { @class = "form-control", @id = "BookingDate", type = "date", min = @minDateTimeString })
+                @Html.ValidationMessageFor(model => model.FromDateTime, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="d-flex mt-2">
+                <div class="form-group mt-2 d-flex">
+                    <span class="fw-bold me-2">From :</span>
+                    <select id="hourSelect" class="form-control" required>
+                        <option value="">Select Hours</option>
+                        <option value="" disabled>--For Lunch--</option>
+                        <option value="11" selected>11 H</option>
+                        <option value="12">12 H</option>
+                        <option value="13">13 H</option>
+                        <option value="" disabled>--For Dinner--</option>
+                        <option value="19">19 H</option>
+                        <option value="20">20 H</option>
+                        <option value="21">21 H</option>
+                        <option value="22">22 H</option>
+                        @*<option value="23">23 H</option>*@
+                    </select>
+
+                    <select id="timeSelect" class="form-control" required>
+                    </select>
+                </div>
+
+                <div class="form-group mt-2 d-flex ms-3">
+                    <span class="fw-bold me-2">To :</span>
+                    <select id="TohourSelect" class="form-control" required>
+                        <option value="">Select Hours</option>
+                        <option value="" disabled>--For Lunch--</option>
+                        <option value="11" selected>11 H</option>
+                        <option value="12">12 H</option>
+                        <option value="13">13 H</option>
+                    </select>
+
+                    <select id="TotimeSelect" class="form-control" required>
+                    </select>
+                </div>
+
+            </div>
+
+            <div class="form-group mt-2">
+                @Html.LabelFor(model => model.NoOFPeople, new { @class = "form-label" })
+                @Html.TextBoxFor(model => model.NoOFPeople, new { @class = "form-control", @id = "total", type = "number", min = 1 })
+                @Html.ValidationMessageFor(model => model.NoOFPeople, "", new { @class = "text-danger" })
+            </div>
+
+
+
+            <div class="form-group mt-2 d-flex flex-row">
+                <span class="fw-bold text-danger">Note  :</span><p class="text-danger">Table can only be reserved between time 11:00 to 13:30 and 19:30 to 23:00</p>
+            </div>
+
+            <div class="form-group mt-2 d-flex justify-content-center flex-row">
+                <button class="btn btn-success">Find the table</button>
+            </div>
+        }
+    </div>
+    <hr />
+
+    <div class="mt-3">
+        <div class="mb-2">
+            Available tables
+            <hr />
+        </div>
+        <div class="mainData">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Table ID</th>
+                        <th>Total Number Of Chairs</th>
+                        <th>Action</th>
+
+                    </tr>
+                </thead>
+                <tbody class="tbody">
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</main>
+
+
+@section scripts{
+
+    <script>
+
+        $(document).ready(function (e) {
+
+            var hoursTime = $("#hourSelect").val();
+            $("#timeSelect").html("");
+
+            $("#timeSelect").on("change", function (e) {
+                console.log($(this).val());
+                $("#TotimeSelect").html("");
+                for (var i = 1; i < 60; i++) {
+                    var optionData = `<option value="${i}">${i} M</option>`;
+                    $("#TotimeSelect").append(optionData);
+                }
+            });
+
+            for (var i = 0; i < 60; i++) {
+                var optionData = `<option value="${i}">${i} M</option>`;
+                $("#timeSelect").append(optionData);
+                $("#TotimeSelect").append(optionData);
+            }
+
+            $("#TohourSelect").on("change", function (e) {
+                if ($(this).val() == 23) {
+                    $("#TotimeSelect").html('');
+                    for (var i = 0; i < 1; i++) {
+                        var optionData = `<option value="${i}">${i} M</option>`;
+                        $("#TotimeSelect").append(optionData);
+                    }
+                }
+                else if ($(this).val() == 13){
+                    $("#TotimeSelect").html('');
+                    for (var i = 0; i <= 30; i++) {
+                        var optionData = `<option value="${i}">${i} M</option>`;
+                        $("#TotimeSelect").append(optionData);
+                    }
+                }
+                else {
+                    $("#TotimeSelect").html('');
+                    for (var i = 0; i < 60; i++) {
+                        var optionData = `<option value="${i}">${i} M</option>`;
+                        $("#TotimeSelect").append(optionData);
+                    }
+                }
+            });
+
+
+          
+            $("#hourSelect").on("change", function (e) {
+                var newVal = $(this).val();
+                console.log(newVal);
+
+                if (newVal == 19) {
+                    $("#timeSelect").html("");
+                    for (var i = 30; i < 60; i++) {
+                        var optionData = `<option value="${i}">${i} M</option>`;
+                        $("#timeSelect").append(optionData);
+                    }
+                }
+                else if (newVal == 13) {
+                    $("#timeSelect").html("");
+                    for (var i = 0; i <= 30; i++) {
+                        var optionData = `<option value="${i}">${i} M</option>`;
+                        $("#timeSelect").append(optionData);
+                    }
+                }
+                
+                else {
+                    $("#timeSelect").html("");
+                    for (var i = 0; i < 60; i++) {
+                        var optionData = `<option value="${i}">${i} M</option>`;
+                        $("#timeSelect").append(optionData);
+                    }
+                }
+
+
+                $("#TohourSelect").html('');
+                if (newVal <= 13) {
+                    for (var i = newVal; i < 14; i++) {
+                        var optionData = `<option value="${i}">${i} H</option>`;
+                        $("#TohourSelect").append(optionData);
+                    }
+                }
+
+                else {
+                    for (var i = newVal; i <= 23; i++) {
+                        var optionData = `<option value="${i}">${i} H</option>`;
+                        $("#TohourSelect").append(optionData);
+                    }
+                }
+
+
+            });
+
+
+            //$("#fromdatetime").on("change", function (e) {
+
+            //    var data = $(this).val();
+            //    var data1 = new Date($(this).val());
+            //    //console.log(data);
+            //    //var minData = data1.getMinutes();
+            //    //var hourData = data1.getHours();
+
+            //    //console.log(hourData);
+
+            //    //if (hourData >= 11 && hourData <= 23) {
+            //    //    if (hourData <= 13  || hourData >= 19) {
+
+            //    //    }
+            //    //}
+
+
+            //    $("#Todatetime").prop("min", data);
+            //});
+
+            $(document).on("submit", "#BookTableForm", function (e) {
+                e.preventDefault();
+
+                var bookDate = $('#BookingDate').val();
+                var from = $('#hourSelect').val() + ":" + $('#timeSelect').val();
+
+                var to = $('#TohourSelect').val() + ":" + $('#TotimeSelect').val();
+                var total = $('#total').val();
+
+                console.log(to);
+
+                $.ajax({
+                    method: 'GET',
+                    url: `/User/BookNewTable?from=${from}&&to=${to}&&total=${total}&&bookDate=${bookDate}`,
+
+                    success: function (res) {
+                        console.log(res);
+                        var data = null;
+                     
+
+                        var FromTimeArray = from.split(":");
+                        var ToTimeArray = to.split(":");
+
+
+                        var myFromDate = new Date(bookDate);
+                        myFromDate.setHours(FromTimeArray[0]);
+                        myFromDate.setMinutes(FromTimeArray[1]);
+
+                        var myToDate = new Date(bookDate);
+                        myToDate.setHours(ToTimeArray[0]);
+                        myToDate.setMinutes(ToTimeArray[1]);
+
+
+                        var myUpdatedToDate = formatDate(new Date(myToDate));
+                        var myUpdatedFromDate = formatDate(new Date(myFromDate));
+                        console.log(myUpdatedToDate);
+                        console.log(myUpdatedFromDate);
+                         
+
+                        function formatDate(date) {
+                            var day = date.getDate().toString().padStart(2, '0');
+                            var month = (date.getMonth() + 1).toString().padStart(2, '0');
+                            var year = date.getFullYear();
+                            var hours = date.getHours().toString().padStart(2, '0');
+                            var minutes = date.getMinutes().toString().padStart(2, '0');
+
+                            // Return formatted string
+                            return `${day}/${month}/${year}T${hours}:${minutes}`;
+                        }
+
+
+
+                        for (let i = 0; i < res.data.length; i++) {
+                            console.log(res.data[i]);
+                            data = data + `<tr>
+                                               <td>${res.data[i].TableId}</td>
+                                               <td>${res.data[i].NoOFChairs}</td>`
+
+                            if (res.data[i].CanBeReserved == true) {
+                                data = data + `<td><a href="/User/BookTheTable?id=${res.data[i].TableId}&&from=${myUpdatedFromDate}&&to=${myUpdatedToDate}&&total=${total}" id="${res.data[i].TableId}">
+                                               <button class="btn btn-sm btn-success">Book Table</button>
+                                            </a>
+                                         </td>
+                                    </tr>`
+                            }
+                            else {
+                                data = data + `<td> <span class="text-danger">Already Booked</span>
+                                             </a>
+                                          </td>
+                                     </tr>`
+                            }
+
+                        }
+
+                        $(".tbody").html(data);
+
+                    },
+                    error: function (error) {
+                        console.log(error);
+                        alert("Something wen't wrong to fetch data");
+                    },
+                });
+
+            });
+
+        });
+    </script>
+}
+
