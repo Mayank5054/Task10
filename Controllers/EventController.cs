@@ -4,8 +4,12 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Task10.Models;
+using Task10.Filters;
+
 namespace Task10.Controllers
 {
+    [LoginFilter]
+    [AuthorizationFilter(new string[] { "customer" })]
     public class EventController : Controller
     {
         private readonly ExamEntities db;
