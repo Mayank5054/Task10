@@ -1,0 +1,100 @@
+﻿
+@{
+    ViewBag.Title = "Dashbord";
+}
+
+<h2>Dashbord</h2>
+@using Task10.Models
+@model List<Product>
+
+
+<div class="d-flex justify-content-end">
+    <div class="">
+        <button type="button" class="btn btn-outline-secondary" id="dishes">Dishes</button>
+        <button type="button" class="btn btn-outline-secondary" id="products">Products</button>
+    </div>
+    @Html.ActionLink("Logout", "Logout", "User", null, new { @class = "btn btn-outline-danger ms-1" })
+</div>
+
+<div class="container" id="contentBlock">
+    @Html.Partial("~/Views/Product/AllProducts.cshtml", Model)
+</div>
+
+
+@section Scripts{
+    <script>
+        //Get Products
+        $("#products").on("click", function () {
+            $("#contentBlock").empty();
+            $("#contentBlock").html( `@Html.Partial("~/Views/Product/AllProducts.cshtml", Model)`);
+        })
+
+        //Get Dishes
+        $("#dishes").on("click", function () {
+            $.ajax({
+                type: "GET",
+                url: "/Dish/Dishes",
+                success: function (response) {
+                    $("#contentBlock").empty();
+                    $("#contentBlock").html(response);
+                    $("#listofdishes").DataTable({
+                        paging: false,
+                        sorting: false,
+                        searching: false,
+                        ordering:false,
+                        lengthMenu:false
+                    });
+                },
+                error: function (error) {
+                    alert("ERROR :  Can't get Dishes. Try Again...");
+                }
+            })
+        })
+
+        //define List of items arry of object
+        var ListofItemsTable;
+
+        //show Nested table for dishitems
+        $(document).on("click", ".items", function () {
+            var table = $("#listofdishes").DataTable();
+            var id = $(this).data("id");
+            var tr = $(this).closest('tr');
+            let row = table.row(tr);
+
+            //check that child is shown or not
+            if (row.child.isShown()) {
+                row.child.hide();
+                tr.removeClass('shown');
+            } else {
+
+                //append child table with parent row
+                row.child(`<table class="table table-bordered text-center table-striped table-light" id="emp${id}">
+                <thead>
+                <th>Name</th>
+                <th>Quantity</th>
+                </thead>
+                <tbody id="itemsoflist${id}"></tbody></table>`).show();
+                tr.addClass('shown');
+
+                //define nested table as DataTable
+                var table = $(`#emp${id}`).DataTable({
+                    paging: false,
+                    searching: false,
+                    ordering: false,
+                    sorting:false,
+                    ajax: {
+                        type: "GET",
+                        url: "/Dish/Dishitem/" + id,
+                        dataType: "JSON",
+                    },
+                    columns: [
+                        { data: "Name",name : "Name", title : "Name" },
+                        { data: "Qty" , name:"Qty", title:"Qty"}
+                    ],
+                    lengthMenu: false,
+                });
+            }
+        })
+    </script>
+}
+

@@ -14,6 +14,12 @@ namespace Task10.Models
     
     public partial class OrderItem
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public OrderItem()
+        {
+            this.OrderRefunds = new HashSet<OrderRefund>();
+        }
+    
         public int OrderItemId { get; set; }
         public Nullable<int> OrderId { get; set; }
         public Nullable<int> ItemID { get; set; }
@@ -31,5 +37,7 @@ namespace Task10.Models
     
         public virtual Product Product { get; set; }
         public virtual Order Order { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<OrderRefund> OrderRefunds { get; set; }
     }
 }

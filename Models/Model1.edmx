@@ -105,6 +105,22 @@
           <Property Name="CreatedBy" Type="int" />
           <Property Name="Isdeleted" Type="int" />
         </EntityType>
+        <EntityType Name="OrderRefund">
+          <Key>
+            <PropertyRef Name="OrderRefundId" />
+          </Key>
+          <Property Name="OrderRefundId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="OrderId" Type="int" />
+          <Property Name="OrderItemId" Type="int" />
+          <Property Name="Amount" Type="decimal" Precision="10" Scale="2" />
+          <Property Name="RefundDate" Type="datetime" />
+          <Property Name="Percentage" Type="decimal" Precision="10" Scale="2" />
+          <Property Name="Status" Type="varchar" MaxLength="255" />
+          <Property Name="CreatedOn" Type="datetime" />
+          <Property Name="UpdatedOn" Type="datetime" />
+          <Property Name="CreatedBy" Type="int" />
+          <Property Name="IsDeleted" Type="int" />
+        </EntityType>
         <EntityType Name="Orders">
           <Key>
             <PropertyRef Name="OrderId" />
@@ -118,6 +134,19 @@
           <Property Name="UpdatedOn" Type="datetime" />
           <Property Name="CreatedBy" Type="int" />
           <Property Name="Isdeleted" Type="int" />
+        </EntityType>
+        <EntityType Name="Overtime">
+          <Key>
+            <PropertyRef Name="OvertimeId" />
+          </Key>
+          <Property Name="OvertimeId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FromDate" Type="datetime" />
+          <Property Name="ToDate" Type="datetime" />
+          <Property Name="UserId" Type="int" />
+          <Property Name="CreatedOn" Type="datetime" />
+          <Property Name="UpdatedOn" Type="datetime" />
+          <Property Name="CreatedBy" Type="int" />
+          <Property Name="IsDeleted" Type="int" />
         </EntityType>
         <EntityType Name="Products">
           <Key>
@@ -283,6 +312,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK__OrderRefu__Order__3D5E1FD2">
+          <End Role="Orders" Type="Self.Orders" Multiplicity="0..1" />
+          <End Role="OrderRefund" Type="Self.OrderRefund" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Orders">
+              <PropertyRef Name="OrderId" />
+            </Principal>
+            <Dependent Role="OrderRefund">
+              <PropertyRef Name="OrderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__OrderRefu__Order__3E52440B">
+          <End Role="OrderItems" Type="Self.OrderItems" Multiplicity="0..1" />
+          <End Role="OrderRefund" Type="Self.OrderRefund" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OrderItems">
+              <PropertyRef Name="OrderItemId" />
+            </Principal>
+            <Dependent Role="OrderRefund">
+              <PropertyRef Name="OrderItemId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK__Orders__Customer__29572725">
           <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
           <End Role="Orders" Type="Self.Orders" Multiplicity="*" />
@@ -295,6 +348,25 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK__Overtime__UserId__4D94879B">
+          <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
+          <End Role="Overtime" Type="Self.Overtime" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Overtime">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="sp_orderDetails" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_orderRefund" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="id" Type="int" Mode="In" />
+          <Parameter Name="IsDelete" Type="int" Mode="In" />
+        </Function>
         <EntityContainer Name="ExamModelStoreContainer">
           <EntitySet Name="Cart" EntityType="Self.Cart" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CartItemId" EntityType="Self.CartItemId" Schema="dbo" store:Type="Tables" />
@@ -303,7 +375,9 @@
           <EntitySet Name="Event" EntityType="Self.Event" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="EventItems" EntityType="Self.EventItems" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="OrderItems" EntityType="Self.OrderItems" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="OrderRefund" EntityType="Self.OrderRefund" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Orders" EntityType="Self.Orders" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Overtime" EntityType="Self.Overtime" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Products" EntityType="Self.Products" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK__Cart__UserId__36B12243" Association="Self.FK__Cart__UserId__36B12243">
@@ -350,9 +424,21 @@
             <End Role="Orders" EntitySet="Orders" />
             <End Role="OrderItems" EntitySet="OrderItems" />
           </AssociationSet>
+          <AssociationSet Name="FK__OrderRefu__Order__3D5E1FD2" Association="Self.FK__OrderRefu__Order__3D5E1FD2">
+            <End Role="Orders" EntitySet="Orders" />
+            <End Role="OrderRefund" EntitySet="OrderRefund" />
+          </AssociationSet>
+          <AssociationSet Name="FK__OrderRefu__Order__3E52440B" Association="Self.FK__OrderRefu__Order__3E52440B">
+            <End Role="OrderItems" EntitySet="OrderItems" />
+            <End Role="OrderRefund" EntitySet="OrderRefund" />
+          </AssociationSet>
           <AssociationSet Name="FK__Orders__Customer__29572725" Association="Self.FK__Orders__Customer__29572725">
             <End Role="Users" EntitySet="Users" />
             <End Role="Orders" EntitySet="Orders" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Overtime__UserId__4D94879B" Association="Self.FK__Overtime__UserId__4D94879B">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Overtime" EntitySet="Overtime" />
           </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -410,6 +496,7 @@
           <Property Name="Isdeleted" Type="Int32" />
           <NavigationProperty Name="Product" Relationship="Self.FK__OrderItem__ItemI__2D27B809" FromRole="OrderItems" ToRole="Products" />
           <NavigationProperty Name="Order" Relationship="Self.FK__OrderItem__Order__2C3393D0" FromRole="OrderItems" ToRole="Orders" />
+          <NavigationProperty Name="OrderRefunds" Relationship="ExamModel.FK__OrderRefu__Order__3E52440B" FromRole="OrderItem" ToRole="OrderRefund" />
         </EntityType>
         <EntityType Name="Order">
           <Key>
@@ -426,6 +513,7 @@
           <Property Name="Isdeleted" Type="Int32" />
           <NavigationProperty Name="OrderItems" Relationship="Self.FK__OrderItem__Order__2C3393D0" FromRole="Orders" ToRole="OrderItems" />
           <NavigationProperty Name="User" Relationship="Self.FK__Orders__Customer__29572725" FromRole="Orders" ToRole="Users" />
+          <NavigationProperty Name="OrderRefunds" Relationship="ExamModel.FK__OrderRefu__Order__3D5E1FD2" FromRole="Order" ToRole="OrderRefund" />
         </EntityType>
         <EntityType Name="Product">
           <Key>
@@ -466,6 +554,7 @@
           <NavigationProperty Name="Orders" Relationship="Self.FK__Orders__Customer__29572725" FromRole="Users" ToRole="Orders" />
           <NavigationProperty Name="Carts" Relationship="ExamModel.FK__Cart__UserId__36B12243" FromRole="User" ToRole="Cart" />
           <NavigationProperty Name="Events" Relationship="ExamModel.FK__Event__UserId__2739D489" FromRole="User" ToRole="Event" />
+          <NavigationProperty Name="Overtimes" Relationship="ExamModel.FK__Overtime__UserId__4D94879B" FromRole="User" ToRole="Overtime" />
         </EntityType>
         <Association Name="FK__Dish__ItemID__300424B4">
           <End Role="Products" Type="Self.Product" Multiplicity="0..1" />
@@ -597,6 +686,27 @@
           <AssociationSet Name="FK__EventItem__ItemI__59FA5E80" Association="ExamModel.FK__EventItem__ItemI__59FA5E80">
             <End Role="Product" EntitySet="Products" />
             <End Role="EventItem" EntitySet="EventItems" />
+          </AssociationSet>
+          <FunctionImport Name="sp_orderDetails" ReturnType="Collection(ExamModel.sp_orderDetails_Result)">
+          <Parameter Name="id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_orderRefund" ReturnType="Collection(ExamModel.sp_orderRefund_Result)">
+            <Parameter Name="id" Mode="In" Type="Int32" />
+            <Parameter Name="IsDelete" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <EntitySet Name="OrderRefunds" EntityType="ExamModel.OrderRefund" />
+          <EntitySet Name="Overtimes" EntityType="ExamModel.Overtime" />
+          <AssociationSet Name="FK__OrderRefu__Order__3E52440B" Association="ExamModel.FK__OrderRefu__Order__3E52440B">
+            <End Role="OrderItem" EntitySet="OrderItems" />
+            <End Role="OrderRefund" EntitySet="OrderRefunds" />
+          </AssociationSet>
+          <AssociationSet Name="FK__OrderRefu__Order__3D5E1FD2" Association="ExamModel.FK__OrderRefu__Order__3D5E1FD2">
+            <End Role="Order" EntitySet="Orders" />
+            <End Role="OrderRefund" EntitySet="OrderRefunds" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Overtime__UserId__4D94879B" Association="ExamModel.FK__Overtime__UserId__4D94879B">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Overtime" EntitySet="Overtimes" />
           </AssociationSet>
         </EntityContainer>
         <EntityType Name="Cart">
@@ -730,6 +840,97 @@
             </Principal>
             <Dependent Role="EventItem">
               <PropertyRef Name="ItemId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <ComplexType Name="sp_orderDetails_Result">
+          <Property Type="Int32" Name="OrderId" Nullable="false" />
+          <Property Type="Int32" Name="CustomerId" Nullable="true" />
+          <Property Type="String" Name="OrderType" Nullable="true" MaxLength="255" />
+          <Property Type="Decimal" Name="TotalAmount" Nullable="true" Precision="10" Scale="2" />
+          <Property Type="DateTime" Name="DateOfOrder" Nullable="true" Precision="23" />
+          <Property Type="String" Name="Items" Nullable="true" MaxLength="8000" />
+          <Property Type="String" Name="RefundStatus" Nullable="true" MaxLength="12" />
+        </ComplexType>
+        <ComplexType Name="sp_orderRefund_Result">
+          <Property Type="Int32" Name="OrderRefundId" Nullable="false" />
+          <Property Type="Int32" Name="OrderId" Nullable="false" />
+          <Property Type="Int32" Name="CustomerId" Nullable="true" />
+          <Property Type="String" Name="OrderType" Nullable="true" MaxLength="255" />
+          <Property Type="Decimal" Name="TotalAmount" Nullable="true" Precision="10" Scale="2" />
+          <Property Type="String" Name="Status" Nullable="true" MaxLength="255" />
+          <Property Type="Int32" Name="IsDeleted" Nullable="true" />
+          <Property Type="Decimal" Name="RefundAmount" Nullable="true" Precision="10" Scale="2" />
+          <Property Type="DateTime" Name="DateOfOrder" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="RefundDate" Nullable="true" Precision="23" />
+          <Property Type="Decimal" Name="RefundPercentage" Nullable="true" Precision="10" Scale="2" />
+          <Property Type="String" Name="Items" Nullable="true" MaxLength="8000" />
+        </ComplexType>
+        <EntityType Name="OrderRefund">
+          <Key>
+            <PropertyRef Name="OrderRefundId" />
+          </Key>
+          <Property Name="OrderRefundId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="OrderId" Type="Int32" />
+          <Property Name="OrderItemId" Type="Int32" />
+          <Property Name="Amount" Type="Decimal" Precision="10" Scale="2" />
+          <Property Name="RefundDate" Type="DateTime" Precision="3" />
+          <Property Name="Percentage" Type="Decimal" Precision="10" Scale="2" />
+          <Property Name="Status" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="CreatedOn" Type="DateTime" Precision="3" />
+          <Property Name="UpdatedOn" Type="DateTime" Precision="3" />
+          <Property Name="CreatedBy" Type="Int32" />
+          <Property Name="IsDeleted" Type="Int32" />
+          <NavigationProperty Name="OrderItem" Relationship="ExamModel.FK__OrderRefu__Order__3E52440B" FromRole="OrderRefund" ToRole="OrderItem" />
+          <NavigationProperty Name="Order" Relationship="ExamModel.FK__OrderRefu__Order__3D5E1FD2" FromRole="OrderRefund" ToRole="Order" />
+        </EntityType>
+        <EntityType Name="Overtime">
+          <Key>
+            <PropertyRef Name="OvertimeId" />
+          </Key>
+          <Property Name="OvertimeId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FromDate" Type="DateTime" Precision="3" />
+          <Property Name="ToDate" Type="DateTime" Precision="3" />
+          <Property Name="UserId" Type="Int32" />
+          <Property Name="CreatedOn" Type="DateTime" Precision="3" />
+          <Property Name="UpdatedOn" Type="DateTime" Precision="3" />
+          <Property Name="CreatedBy" Type="Int32" />
+          <Property Name="IsDeleted" Type="Int32" />
+          <NavigationProperty Name="User" Relationship="ExamModel.FK__Overtime__UserId__4D94879B" FromRole="Overtime" ToRole="User" />
+        </EntityType>
+        <Association Name="FK__OrderRefu__Order__3E52440B">
+          <End Type="ExamModel.OrderItem" Role="OrderItem" Multiplicity="0..1" />
+          <End Type="ExamModel.OrderRefund" Role="OrderRefund" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OrderItem">
+              <PropertyRef Name="OrderItemId" />
+            </Principal>
+            <Dependent Role="OrderRefund">
+              <PropertyRef Name="OrderItemId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__OrderRefu__Order__3D5E1FD2">
+          <End Type="ExamModel.Order" Role="Order" Multiplicity="0..1" />
+          <End Type="ExamModel.OrderRefund" Role="OrderRefund" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Order">
+              <PropertyRef Name="OrderId" />
+            </Principal>
+            <Dependent Role="OrderRefund">
+              <PropertyRef Name="OrderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Overtime__UserId__4D94879B">
+          <End Type="ExamModel.User" Role="User" Multiplicity="0..1" />
+          <End Type="ExamModel.Overtime" Role="Overtime" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Overtime">
+              <PropertyRef Name="UserId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -892,6 +1093,68 @@
                 <ScalarProperty Name="ItemId" ColumnName="ItemId" />
                 <ScalarProperty Name="EventId" ColumnName="EventId" />
                 <ScalarProperty Name="EventItemId" ColumnName="EventItemId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="sp_orderDetails" FunctionName="ExamModel.Store.sp_orderDetails">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="ExamModel.sp_orderDetails_Result">
+                <ScalarProperty Name="OrderId" ColumnName="OrderId" />
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+                <ScalarProperty Name="OrderType" ColumnName="OrderType" />
+                <ScalarProperty Name="TotalAmount" ColumnName="TotalAmount" />
+                <ScalarProperty Name="DateOfOrder" ColumnName="DateOfOrder" />
+                <ScalarProperty Name="Items" ColumnName="Items" />
+                <ScalarProperty Name="RefundStatus" ColumnName="RefundStatus" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_orderRefund" FunctionName="ExamModel.Store.sp_orderRefund">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="ExamModel.sp_orderRefund_Result">
+                <ScalarProperty Name="OrderRefundId" ColumnName="OrderRefundId" />
+                <ScalarProperty Name="OrderId" ColumnName="OrderId" />
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+                <ScalarProperty Name="OrderType" ColumnName="OrderType" />
+                <ScalarProperty Name="TotalAmount" ColumnName="TotalAmount" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="RefundAmount" ColumnName="RefundAmount" />
+                <ScalarProperty Name="DateOfOrder" ColumnName="DateOfOrder" />
+                <ScalarProperty Name="RefundDate" ColumnName="RefundDate" />
+                <ScalarProperty Name="RefundPercentage" ColumnName="RefundPercentage" />
+                <ScalarProperty Name="Items" ColumnName="Items" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <EntitySetMapping Name="OrderRefunds">
+            <EntityTypeMapping TypeName="ExamModel.OrderRefund">
+              <MappingFragment StoreEntitySet="OrderRefund">
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="UpdatedOn" ColumnName="UpdatedOn" />
+                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="Percentage" ColumnName="Percentage" />
+                <ScalarProperty Name="RefundDate" ColumnName="RefundDate" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="OrderItemId" ColumnName="OrderItemId" />
+                <ScalarProperty Name="OrderId" ColumnName="OrderId" />
+                <ScalarProperty Name="OrderRefundId" ColumnName="OrderRefundId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Overtimes">
+            <EntityTypeMapping TypeName="ExamModel.Overtime">
+              <MappingFragment StoreEntitySet="Overtime">
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="UpdatedOn" ColumnName="UpdatedOn" />
+                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="ToDate" ColumnName="ToDate" />
+                <ScalarProperty Name="FromDate" ColumnName="FromDate" />
+                <ScalarProperty Name="OvertimeId" ColumnName="OvertimeId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

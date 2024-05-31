@@ -1,0 +1,43 @@
+﻿
+
+
+@using Task10.Models
+@model List<Dish>
+
+@Html.ActionLink("Add New Dish", "AddDish", "Product", new { @class = "btn btn-primary mb-3" })
+<table class="table table-bordered" id="listofdishes">
+    <thead>
+        <tr>
+            <th>Dish ID</th>
+            <th>Type</th>
+            <th>Item Name</th>
+            <th>Number of dishes</th>
+            <th>Price</th>
+            <th>Date</th>
+            <th>Created By</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.DishId</td>
+                <td>@item.Type</td>
+                <td>@item.Product.Name</td>
+                <td>@item.DishCount</td>
+                <td>@item.Product.Price</td>
+                <td>@String.Format("{0:dd/MM/yyyy}", item.Date)</td>
+                <td>@item.CreatedBy</td>
+                <td class="d-flex">
+                    <button type="button" class="btn btn-outline-success items me-2" data-id="@item.DishId"> Items</button>
+                    @Html.ActionLink("Update", "UpdateDish", "Dish", new { id = item.DishId }, new { @class = "btn btn-outline-primary me-2" })
+                    @Html.ActionLink("Delete", "DeleteDish", "Dish", new { id = item.DishId }, new { @class = "btn btn-outline-danger" })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+

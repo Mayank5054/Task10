@@ -1,0 +1,217 @@
+﻿
+@{
+    ViewBag.Title = "UpdateDish";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>UpdateDish</h2>
+
+
+@using Task10.Models
+@model Dish
+
+
+@using (Html.BeginForm("", "", FormMethod.Post, new { id = "NewDish" }))
+{
+    @Html.HiddenFor(d => d.DishId);
+    @Html.HiddenFor(d => d.Type, new { id = "dishtype" })
+
+    <div class="form-group">
+        @Html.Label("Dish Type : ", new { @class = "fw-bold form-label" })
+        @Html.DisplayFor(d => d.Type)
+    </div>
+
+    <div class="form-group">
+        @Html.Label("Dish Name : ", new { @class = "fw-bold form-label" })
+        @Html.DisplayFor(d => d.Product.Name)
+    </div>
+
+    @Html.HiddenFor(d => d.ItemID)
+    @Html.HiddenFor(d => d.CreatedBy)
+    @Html.HiddenFor(d => d.CreatedOn)
+    @Html.HiddenFor(d => d.Isdeleted)
+
+
+    <div class="form-group">
+        @Html.LabelFor(d => d.Date, "Date", new { @class = "fw-bold form-label" })
+        @Html.TextBoxFor(e => e.Date, "{0:yyyy-MM-dd}", new { @class = "form-control form-control-user", type = "date" })
+        @Html.ValidationMessageFor(d => d.Date, "", new { @class = "text-danger" })
+    </div>
+
+
+    <div class="form-group">
+        @Html.LabelFor(d => d.ItemID, "Items", new { @class = "fw-bold form-label" })
+
+        <div class="additem d-flex">
+            <select name="DishItem" id="DishItem" class="form-control form-control-user me-2">
+                <option> Select Item</option>
+            </select>
+            <label class="fw-bold form-label me-2">Quantity : </label>
+            <input type="number" id="Quantity" class="form-control me-2" min="0" />
+            <button type="button" class="btn btn-outline-primary" id="btnadditem">Add Item</button>
+        </div>
+    </div>
+
+
+
+    <div class="form-group">
+        @Html.LabelFor(d => d.DishCount, "DishCount", new { @class = "fw-bold form-label" })
+        @Html.TextBoxFor(e => e.DishCount, new { @class = "form-control form-control-user", type = "number", min = 0 })
+        @Html.ValidationMessageFor(d => d.DishCount, "", new { @class = "text-danger" })
+    </div>
+    @Html.ValidationSummary("", new { @class = "text-danger" })
+
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Add New Dish</button>
+    </div>
+}
+
+
+<div class="container">
+    <table class="table table-bordered" id="dishitemstable">
+        <thead>
+            <tr>
+                <th>Item Name</th>
+                <th>Quantity</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var dishitem in Model.DishItems)
+            {
+                if (dishitem.Isdeleted == 0)
+                {
+
+                    <tr>
+                        <td>@dishitem.Product.Name</td>
+                        <td class="d-flex">
+                            @Html.TextBoxFor(m => dishitem.Qty, new { type = "number", name = "Qty", @class = "form-control me-2", min = 0, @id = dishitem.ItemID })
+                            <button type="button" class="btn btn-outline-primary qtyBtn" data-id="@dishitem.ItemID">Save</button>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+@section Scripts{
+    <script>
+
+        //define empty array for dishitems
+        var listofItems = [];
+
+        //get products name , and add dishitems into array
+        $(document).ready(function () {
+            var type = '@Model.Type';
+            $.ajax({
+                type: "GET",
+                url: "/Dish/GetProduct",
+                data: { type: type },
+                success: function (data) {
+                    $("#DishItem").empty();
+                    $("#DishItem").append(`<option selected>Selecte Item</option>`)
+                    data.forEach((item, index) => {
+                        $("#DishItem").append(`<option value="${item.Id}">${item.Name}</option>`);
+                    })
+                }, error: function (error) {
+                    alert(error);
+                }
+            })
+
+            $('#dishitemstable tbody tr').each(function () {
+                var $row = $(this);
+                var qty = $row.find('input[type="number"]').val();
+                var itemId = $row.find('button[type="button"]').data('id');
+
+                var dishItem = {
+                    itemId: parseInt(itemId),
+                    qty: parseInt(qty)
+                };
+
+                listofItems.push(dishItem);
+            });
+        })
+
+
+        //define child table as datatable
+        var table = $("#dishitemstable").DataTable({
+            paging: false,
+            searching: false,
+            sorting: false,
+            ordering: false,
+            lemgthmenu: false
+        })
+
+
+        //change quantity of dishitems
+        $(document).on("click", ".qtyBtn", function () {
+            var row = $(this).closest('tr');
+            var qty = row.find('input[type="number"]').val();
+            var itemId = $(this).data("id");
+
+            listofItems.forEach(i => {
+                if (i.itemId == itemId) {
+                    i.qty = parseInt(qty);
+                }
+            })
+        })
+
+        //add new item
+        $("#btnadditem").on("click", function () {
+            var itemId = $("#DishItem").val();
+            var qty = $("#Quantity").val();
+
+            if (itemId == "Select Item" || qty == "") {
+                alert("Please Select Item Or Add Quantity");
+            } else {
+                var dishItem = {
+                    itemId: parseInt(itemId),
+                    qty: parseInt(qty)
+                };
+
+                var con = true;
+                listofItems.forEach(i => {
+                    if (i.itemId == dishItem.itemId) {
+                        con = false;
+                    }
+                })
+                if (con) {
+                    listofItems.push(dishItem);
+                    alert("Item added successfully");
+                } else {
+                    alert("This Item is alreday Added");
+                }
+            }
+        });
+
+        //update data
+        $("#NewDish").on("submit", function (e) {
+            e.preventDefault();
+
+
+            var form = $("#NewDish").get(0);
+            var data = new FormData(form);
+            data.append('SelectedItems', JSON.stringify(listofItems));
+
+            $.ajax({
+                type: "POST",
+                url: "/Dish/UpdateDish",
+                data: data,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    if (response.success) {
+                        alert(response.message);
+                        window.location.href = "/Admin/Dashbord";
+                    } else {
+                        alert(response.message);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.log(xhr.responseText);
+                    alert("Dish is not Updated");
+                }
+            });
+        })
+    </script>
+}

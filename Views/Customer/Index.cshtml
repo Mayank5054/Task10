@@ -1,0 +1,137 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<main class="shadow-lg bg-white p-2 m-2">
+
+    <div class="table-responsive w-100">
+        <table class="table w-100" id="order">
+            <thead>
+                <tr>
+                    <th>Order type</th>
+                    <th>Item</th>
+
+
+                    <th>Total amount</th>
+                    <th>Date of order</th>
+                    <th>Refund request</th>
+                </tr>
+            </thead>
+            <tbody class="emp">
+            </tbody>
+        </table>
+        @*<div class="modal fade" id="modalId" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog"
+                 aria-labelledby="modalTitleId" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-md" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="modalTitleId">
+                                Modal title
+                            </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body" id="popup">
+
+                        </div>
+                    </div>
+                </div>
+            </div>*@
+    </div>
+</main>
+
+@section scripts{
+    <script>
+        let table;
+
+        $.ajax({
+            url: "/Customer/Details",
+            type: 'GET',
+            success: function (data) {
+                table = $("#order").DataTable({
+
+                       data : data,
+                   filter: true,
+
+                    columns: [
+                        {
+                            data: "OrderType"
+                        },
+                        {
+                            data: "Items"
+                            },
+
+
+
+                        { data: "TotalAmount" },
+                        {
+                            data: "DateOfOrder",
+                            render: function (data) {
+
+                                const timestamp = parseInt(data.match(/\d+/)[0]);
+
+                                const date = new Date(timestamp);
+
+                                const day = date.getDate().toString().padStart(2, '0');
+                                const month = (date.getMonth() + 1).toString().padStart(2, '0');
+                                const year = date.getFullYear();
+
+                                const formattedDate = `${day}-${month}-${year}`
+                               return formattedDate;
+
+                            }
+                        },
+                        {
+                            data: null,
+                            render: function (data) {
+                                if (data.RefundStatus == "Not Refunded") {
+                                    return `<button class="btn btn-outline-success" id="Request" data-task-id="${data.OrderId}" >Request</button>`
+                                }
+                              return "----"
+
+                            }
+                        }
+
+
+
+                    ]
+                });
+            }
+        });
+
+
+        $(document).on("click", "#Request", function (e) {
+            var id = $(this).data("task-id");
+            $.ajax({
+                url: "/Customer/RequestForRefund/" + id,
+                type: "GET",
+                processData: false,
+                contentType: false,
+                success: function (response) {
+
+                    if (response.success) {
+
+                        alert("Request send Succesfully")
+                        window.location.href = "/Customer/Index";
+                    }
+                    else {
+                        alert("Request already created")
+                    }
+
+
+                    //$("#popup").children().remove();
+                    //$("#popup").append(response);
+                    //$.validator.unobtrusive.parse($("#updateTask"));
+                    //$("#modalId").modal("show");
+                    //window.location.href = "/Task/Dashboard";
+                },
+                error: function (request, status, error) {
+                    alert(request.responseText);
+                }
+            });
+        });
+
+
+    </script>
+}
+

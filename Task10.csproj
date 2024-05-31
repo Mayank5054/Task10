@@ -128,14 +128,21 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\AuthenticationController.cs" />
     <Compile Include="Controllers\CartController.cs" />
+    <Compile Include="Controllers\CustomerController.cs" />
+    <Compile Include="Controllers\DishController.cs" />
     <Compile Include="Controllers\EventController.cs" />
     <Compile Include="Controllers\EventItemsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MailController.cs" />
+    <Compile Include="Controllers\ProductController.cs" />
+    <Compile Include="ExtendedModels\Dish.cs" />
+    <Compile Include="ExtendedModels\DishItemClass.cs" />
     <Compile Include="ExtendedModels\Event.cs" />
     <Compile Include="ExtendedModels\LoginModel.cs" />
+    <Compile Include="ExtendedModels\Product.cs" />
     <Compile Include="ExtendedModels\User.cs" />
     <Compile Include="Filters\AuthorizationFilter.cs" />
     <Compile Include="Filters\LoginFilter.cs" />
@@ -183,7 +190,19 @@
     <Compile Include="Models\OrderItem.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\OrderRefund.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Overtime.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Product.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_orderDetails_Result.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_orderRefund_Result.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\User.cs">
@@ -192,6 +211,14 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="Scripts\CustomJs\AjaxCall.js" />
     <Compile Include="ViewModels\EventItemsProducts.cs" />
+    <Content Include="Views\Admin\Index.cshtml" />
+    <Content Include="Views\Admin\OrderRefund.cshtml" />
+    <Content Include="Views\Customer\Index.cshtml" />
+    <Content Include="Views\Customer\RefundHistory.cshtml" />
+    <Content Include="Views\Admin\Dashbord.cshtml" />
+    <Content Include="Views\Dish\AddDish.cshtml" />
+    <Content Include="Views\Dish\AllDishes.cshtml" />
+    <Content Include="Views\Dish\UpdateDish.cshtml" />
     <None Include="Views\EventItems\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -280,6 +307,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Views\Mail\" />
+    <Folder Include="Views\Product\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />

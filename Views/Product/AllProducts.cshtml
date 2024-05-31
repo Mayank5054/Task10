@@ -1,0 +1,40 @@
+﻿@using Task10.Models
+@model List<Product>
+
+    @Html.ActionLink("Add New Product", "AddProduct", "Product", null, new { @class = "btn btn-primary mb-3" })
+    <table class="table table-bordered" id="ProductTable">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Threshold</th>
+                <th>WightType</th>
+                <th>Type</th>
+                <th>Price</th>
+                <th>Visible</th>
+                <th>Created On</th>
+                <th>Updated On</th>
+                <th>Created By</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+            <tr>
+                <td>@item.Name</td>
+                <td>@item.Threshold</td>
+                <td>@item.WeightType</td>
+                <td>@item.Type</td>
+                <td>@item.Price</td>
+                <td>@item.Visible</td>
+                <td>@item.CreatedOn</td>
+                <td>@item.UpdatedOn</td>
+                <td>@item.CreatedBy</td>
+                <td class="d-flex">
+                    @Html.ActionLink("Update", "UpdateProduct", "Product", new { id = item.ProductId }, new { @class = "btn btn-outline-primary me-2" })
+                    @Html.ActionLink("Delete", "DeleteProduct", "Product", new { id = item.ProductId }, new { @class = "btn btn-outline-danger" })
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>

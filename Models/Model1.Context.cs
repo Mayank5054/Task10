@@ -12,6 +12,8 @@ namespace Task10.Models
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Core.Objects;
+    using System.Linq;
     
     public partial class ExamEntities : DbContext
     {
@@ -35,5 +37,29 @@ namespace Task10.Models
         public virtual DbSet<CartItemId> CartItemIds { get; set; }
         public virtual DbSet<Event> Events { get; set; }
         public virtual DbSet<EventItem> EventItems { get; set; }
+        public virtual DbSet<OrderRefund> OrderRefunds { get; set; }
+        public virtual DbSet<Overtime> Overtimes { get; set; }
+    
+        public virtual ObjectResult<sp_orderDetails_Result> sp_orderDetails(Nullable<int> id)
+        {
+            var idParameter = id.HasValue ?
+                new ObjectParameter("id", id) :
+                new ObjectParameter("id", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_orderDetails_Result>("sp_orderDetails", idParameter);
+        }
+    
+        public virtual ObjectResult<sp_orderRefund_Result> sp_orderRefund(Nullable<int> id, Nullable<int> isDelete)
+        {
+            var idParameter = id.HasValue ?
+                new ObjectParameter("id", id) :
+                new ObjectParameter("id", typeof(int));
+    
+            var isDeleteParameter = isDelete.HasValue ?
+                new ObjectParameter("IsDelete", isDelete) :
+                new ObjectParameter("IsDelete", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_orderRefund_Result>("sp_orderRefund", idParameter, isDeleteParameter);
+        }
     }
 }

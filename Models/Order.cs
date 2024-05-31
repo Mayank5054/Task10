@@ -18,6 +18,7 @@ namespace Task10.Models
         public Order()
         {
             this.OrderItems = new HashSet<OrderItem>();
+            this.OrderRefunds = new HashSet<OrderRefund>();
         }
     
         public int OrderId { get; set; }
@@ -33,5 +34,7 @@ namespace Task10.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<OrderItem> OrderItems { get; set; }
         public virtual User User { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<OrderRefund> OrderRefunds { get; set; }
     }
 }

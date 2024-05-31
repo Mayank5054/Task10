@@ -1,0 +1,80 @@
+﻿
+@{
+    ViewBag.Title = "AddProduct";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>AddProduct</h2>
+
+@using Task10.Models
+@model Product
+
+
+@using (Html.BeginForm("AddProduct", "Product", FormMethod.Post))
+{
+    <div class="form-group">
+        @Html.LabelFor(p => p.Name, "Product Name", new { @class = "fw-bold form-label" })
+        @Html.TextBoxFor(p => p.Name, new { @class = "form-control" , required="true"})
+        @Html.ValidationMessageFor(p => p.Name, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(p => p.Type, "Product Type", new { @class = "fw-bold form-label" })
+        @Html.DropDownListFor(p => p.Type, new List<SelectListItem>
+            {
+                new SelectListItem{Text="Dish",Value="Dish"},
+                new SelectListItem{Text="Purchasable",Value="Purchasable"},
+                new SelectListItem{Text="RAW",Value="RAW"},
+                new SelectListItem{Text="DishItem",Value="DishItem"},
+            },"Select Type", new { @class = "form-control", required = "true" })
+
+        @Html.ValidationMessageFor(p => p.Name, "", new { @class = "text-danger" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(p => p.WeightType, "Product WeightType", new { @class = "fw-bold form-label" })
+        @Html.DropDownListFor(p => p.WeightType, new List<SelectListItem>
+            {
+                new SelectListItem{Text="kg",Value="kg"},
+                new SelectListItem{Text="gram",Value="gram"},
+                new SelectListItem{Text="unit",Value="unit"},
+                new SelectListItem{Text="liter",Value="liter"},
+            },"Select Type", new { @class = "form-control", required = "true" })
+
+        @Html.ValidationMessageFor(p => p.WeightType, "", new { @class = "text-danger" })
+    </div>
+
+
+
+    <div class="form-group">
+        @Html.LabelFor(u => u.Threshold, "Threshold", new { @class = "fw-bold form-label" })
+        @Html.TextBoxFor(u => u.Threshold, new { @class = "form-control", type = "number", min = 0, required = "true" })
+
+        @Html.ValidationMessageFor(u => u.Threshold, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(u => u.Price, "Price", new { @class = "fw-bold form-label" })
+        @Html.TextBoxFor(u => u.Price, new { @class = "form-control", type = "number", min = 0, required = "true" })
+        @Html.ValidationMessageFor(u => u.Price, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group">
+
+        @Html.LabelFor(u => u.Visible, "Is Item Visible", new { @class = "fw-bold form-label" })
+        @if (Model == null)
+        {
+
+            @Html.CheckBox("Visible", false, new { value = "True", required = "true" })
+        }
+        else
+        {
+            @Html.CheckBox("Visible", Model.Visible == true ? true : false, new { value = "True", required = "true" })
+        }
+        @Html.ValidationMessageFor(u => u.Visible, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Add New Product</button>
+    </div>
+}
+

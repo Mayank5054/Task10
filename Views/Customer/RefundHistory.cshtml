@@ -1,0 +1,186 @@
+﻿
+@{
+    ViewBag.Title = "RefundHistory";
+}
+
+<main class="shadow-lg bg-white p-2 m-2">
+
+    <div class="float-end d-flex mb-1">
+
+        <div class="date-field ">
+            <input type="text" class="form-control  date-input" name="startDate" id="startDate"
+                   placeholder="Start Date">
+        </div>
+        <div class="date-field ms-1">
+            <input type="text" class="form-control  date-input" name="endDate" id="endDate" placeholder="End Date">
+        </div>
+        <button type="button" class="btn text-white ms-1" id="filterDate" style="background-color: #222E3C;">Apply</button>
+
+    </div>
+
+    <div class="table-responsive w-100">
+
+        <table class="table w-100" id="dtasklogentry">
+            <thead>
+                <tr>
+                    <th>Order type</th>
+                    <th>Items</th>
+                    <th>Total amount</th>
+                    <th>Date of order</th>
+                    <th>Refunded amount</th>
+                    <th>Refunded percentage</th>
+                    <th>Refund date</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+        <div class="modal fade" id="modalId" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog"
+             aria-labelledby="modalTitleId" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-md" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalTitleId">
+                            Modal title
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" id="popup">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+@section scripts{
+    <script>
+
+
+        $(document).ready(function () {
+            $('#startDate').on('change', function () {
+                var startDate = $(this).val();
+                $('#endDate').attr('min', startDate);
+            });
+
+            // Initialize the endDate min attribute on page load if startDate has a value
+            if ($('#startDate').val()) {
+                $('#endDate').attr('min', $('#startDate').val());
+            }
+        });
+        $('#startDate').datepicker({
+            format: 'mm/dd/yyyy',
+            autoclose: true,
+            todayHighlight: true
+        }).on('changeDate', function (e) {
+            var startDate = $(this).datepicker('getDate');
+            $('#endDate').datepicker('setStartDate', startDate);
+        });
+
+        $('#endDate').datepicker({
+            format: 'mm/dd/yyyy',
+            autoclose: true,
+            todayHighlight: true
+        });
+
+
+
+
+        let table = $("#dtasklogentry").DataTable({
+                    ajax: {
+                        url: "/Customer/RefundHistoryDetails",
+                        type: 'POST',
+                        dataType: "JSON",
+                        data: function (e) {
+                            e.startDate = $("#startDate").val()
+                            e.endDate = $("#endDate").val()
+                        }
+                    },
+                   filter: true,
+                    serverSide: true,
+                    proccesing: true,
+                    columns: [
+                        {
+                            data: "OrderType"
+                        },
+                        { data: "Items" },
+
+                        { data: "TotalAmount" },
+                        {
+                            data: "DateOfOrder"
+                        },
+                        {
+                            data: "RefundAmount",
+                            render: function (data) {
+                                if (data != null) {
+                                    return data
+                                }
+                                return "----"
+                            }
+                        },
+                        {
+                            data: "RefundPercentage",
+                            render: function (data) {
+                                if (data != null) {
+                                    return data
+                                }
+                                return "----"
+                            }
+                        },
+                        {
+                            data: "RefundDate",
+                        },
+                        {
+                            data: "Status"
+                        },
+                        {
+                            data: null,
+                            render: function (data) {
+                                if ( data.Status == "Applied") {
+                                    return `<button class="btn btn-outline-danger" data-task-id="${data.OrderRefundId}" id="Delete" }>Delete</button>`;
+                                }
+                                return "------"
+                            }
+
+                        }
+
+
+
+                    ]
+                });
+
+
+
+        $(document).on("click", "#Delete", function (e) {
+            var id = $(this).data("task-id");
+            $.ajax({
+                url: "/Customer/DeleteRequest/" + id,
+                type: "GET",
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                //    $("#popup").children().remove();
+                //    $("#popup").append(response);
+                //    $.validator.unobtrusive.parse($("#updateTask"));
+                //    $("#modalId").modal("show");
+                    //window.location.href = "/Customer/RefundHistory";
+
+                    table.ajax.reload();
+                },
+                error: function (request, status, error) {
+                    alert(request.responseText);
+                }
+            });
+        });
+
+        $(document).on("click", "#filterDate", function (e) {
+            e.preventDefault();
+            table.ajax.reload();
+        })
+
+
+    </script>
+}
