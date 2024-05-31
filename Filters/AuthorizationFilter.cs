@@ -32,14 +32,7 @@ namespace Task10.Filters
                 {
                     filterContext.Result = new RedirectResult("~/Authentication/UnAuthorized");
                 }
-
-
-
-
             }
-          
-    
-          
         }
     }
 }
